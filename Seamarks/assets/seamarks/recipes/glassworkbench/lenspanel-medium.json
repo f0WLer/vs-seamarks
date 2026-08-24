@@ -1,0 +1,241 @@
+// See lenspanel-narrow.json for why this is one concrete recipe per glass type, why the hammer and
+// chisel are separate steps, why no step sets its own shape or textures, why every step still repeats
+// its own workpieceTransform, and for the seamarks:tooltipitem attribute on each.
+[
+	{
+		code: "seamarks:lenspanel-medium-clearoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-clearoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-2-clearoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 800 }
+					}
+				},
+				useTime: 5
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 5
+			}
+		]
+	},
+	{
+		code: "seamarks:lenspanel-medium-redoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-redoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-2-redoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 800 }
+					}
+				},
+				useTime: 5
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 5
+			}
+		]
+	},
+	{
+		code: "seamarks:lenspanel-medium-greenoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-greenoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-2-greenoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 800 }
+					}
+				},
+				useTime: 5
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 5
+			}
+		]
+	},
+	{
+		code: "seamarks:lenspanel-medium-amberoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-amberoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-2-amberoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 800 }
+					}
+				},
+				useTime: 5
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 5
+			}
+		]
+	}
+]

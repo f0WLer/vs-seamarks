@@ -1,0 +1,261 @@
+// One concrete recipe per glass type, not a wildcarded one: Glassmaking's workbench registry dedupes by
+// a recipe's own code, and generating four color clones from a single wildcarded code (RecipeBase's own
+// mechanism) leaves them all sharing that one code, so only the first survives registration. Spelling
+// out all four here keeps every color's output reachable.
+//
+// Blowtorch reheats the blank, then a chisel pass and a hammer pass cut the rings. Two separate steps,
+// not one step naming both as "handItem"/"otherHandItem": those two tool keys both resolve to whatever
+// single item the player is currently holding (Vintage Story players have no separate off hand), so a
+// step naming both never has anything that can satisfy it. Both hand tools match by tag, so any hammer
+// or chisel works, not one exact metal. The recipeAttributes.seamarks:tooltipitem on each is read by
+// Glassmaking/WorkbenchToolTipFix.cs, which supplies the display icon its handbook and interaction hint
+// would otherwise crash looking for on a tag-matched ingredient.
+//
+// No step sets its own shape or textures, on purpose: GlassWorkpieceRenderer.GenMesh only falls back to
+// the input item's own shape (lensblank-annealed's, the uncut blank) when no earlier step supplies one of
+// its own, so leaving every step without one keeps the workpiece looking like the blank all the way
+// through blowtorch, chisel and hammer. It only reads as the finished panel once the last step actually
+// completes and BlockEntityWorkbench swaps the mounted stack for the real output item.
+//
+// Every step repeats its own workpieceTransform instead of leaning on lensblank-raw's or lensblank-
+// annealed's own workbenchItemTransform attribute. Both are read directly off the current step with no
+// backward search involved, so this isn't working around the same bug, it's just belt and suspenders in
+// case a future step ever needs a different pose mid-recipe.
+[
+	{
+		code: "seamarks:lenspanel-narrow-clearoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-clearoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-1-clearoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 900 }
+					}
+				},
+				useTime: 6
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 6
+			}
+		]
+	},
+	{
+		code: "seamarks:lenspanel-narrow-redoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-redoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-1-redoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 900 }
+					}
+				},
+				useTime: 6
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 6
+			}
+		]
+	},
+	{
+		code: "seamarks:lenspanel-narrow-greenoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-greenoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-1-greenoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 900 }
+					}
+				},
+				useTime: 6
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 6
+			}
+		]
+	},
+	{
+		code: "seamarks:lenspanel-narrow-amberoptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-amberoptical" },
+		output: { type: "item", code: "seamarks:lenspanel-1-amberoptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 900 }
+					}
+				},
+				useTime: 6
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 6
+			}
+		]
+	}
+]

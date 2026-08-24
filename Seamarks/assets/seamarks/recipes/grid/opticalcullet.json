@@ -1,0 +1,49 @@
+[
+	{
+		ingredientPattern: "ABC",
+		ingredients: {
+			"A": { type: "item", code: "game:crushed-quartz", quantity: 4 },
+			"B": { type: "item", code: "game:lime" },
+			"C": { type: "item", code: "game:potash" }
+		},
+		width: 3,
+		height: 1,
+		output: { type: "item", code: "seamarks:opticalcullet-clearoptical" }
+	},
+	{
+		ingredientPattern: "ABC,D__",
+		ingredients: {
+			"A": { type: "item", code: "game:crushed-quartz", quantity: 4 },
+			"B": { type: "item", code: "game:lime" },
+			"C": { type: "item", code: "game:potash" },
+			"D": { type: "item", code: "game:powder-cinnabar" }
+		},
+		width: 3,
+		height: 2,
+		output: { type: "item", code: "seamarks:opticalcullet-redoptical" }
+	},
+	{
+		ingredientPattern: "ABC,D__",
+		ingredients: {
+			"A": { type: "item", code: "game:crushed-quartz", quantity: 4 },
+			"B": { type: "item", code: "game:lime" },
+			"C": { type: "item", code: "game:potash" },
+			"D": { type: "item", code: "game:crushed-olivine" }
+		},
+		width: 3,
+		height: 2,
+		output: { type: "item", code: "seamarks:opticalcullet-greenoptical" }
+	},
+	{
+		ingredientPattern: "ABC,D__",
+		ingredients: {
+			"A": { type: "item", code: "game:crushed-quartz", quantity: 4 },
+			"B": { type: "item", code: "game:lime" },
+			"C": { type: "item", code: "game:potash" },
+			"D": { type: "item", code: "game:resin", quantity: 8 }
+		},
+		width: 3,
+		height: 2,
+		output: { type: "item", code: "seamarks:opticalcullet-amberoptical" }
+	}
+]

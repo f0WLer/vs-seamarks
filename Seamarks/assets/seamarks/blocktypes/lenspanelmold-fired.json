@@ -1,0 +1,67 @@
+{
+	code: "lenspanelmold",
+	// Glassmaking's own casting mold class, not the base game's BlockToolMold: this pours molten glass
+	// through Glassmaking's own ladle/sink interface, not molten metal. If Glassmaking isn't installed,
+	// an unresolved class falls back to a plain inert Block with a logged warning, so this stays safe to
+	// ship unconditionally.
+	class: "glassmaking:castingmold",
+	entityClass: "glassmaking:castingmold",
+	variantgroups: [
+		{ code: "color", states: ["blue", "fire", "black", "brown", "cream", "earthyorange", "gray", "orange", "red", "tan"] },
+		{ code: "materialtype", states: ["fired"] }
+	],
+	shape: { base: "seamarks:block/lenspanelmold" },
+	textures: {
+		"other": { base: "game:block/clay/hardened/{color}" },
+		"floor": { base: "game:block/clay/hardened/{color}" }
+	},
+	attributes: {
+		reinforcable: true,
+		handbook: { groupBy: ["lenspanelmold-*"] },
+		// A bare "*" matches every registered glass type across every domain, capturing e.g. "redoptical"
+		// out of "seamarks:redoptical" and substituting it into the output code below. Every recipe here
+		// has to share the same amount, since Glassmaking only reads Recipes[0]'s amount as the mold's
+		// fill requirement.
+		"glassmaking:castingmold": [
+			{
+				recipe: { code: "seamarks:*", amount: 400 },
+				output: { type: "item", code: "seamarks:lensblank-raw-*" }
+			}
+		],
+		// Matches the cavity floor itself (Cube1 spans x:4-12, z:2.5-13.5), with only a sliver of margin
+		// so the poured surface doesn't z-fight against the surrounding walls.
+		fillHeight: 1,
+		fillQuadsByLevel: [
+			{ x1: 4.2, z1: 2.7, x2: 11.8, z2: 13.3 }
+		]
+	},
+	blockmaterial: "Ceramic",
+	creativeinventory: { "general": ["*"] },
+	replaceable: 700,
+	resistance: 1.5,
+	maxStackSize: 8,
+	lightAbsorption: 0,
+	sounds: { walk: "walk/stone" },
+	collisionbox: { x1: 0.0625, y1: 0, z1: 0.0625, x2: 0.9375, y2: 0.125, z2: 0.9375 },
+	selectionbox: { x1: 0.0625, y1: 0, z1: 0.0625, x2: 0.9375, y2: 0.125, z2: 0.9375 },
+	sideopaque: { all: false },
+	sidesolid: { all: false },
+	// Matches the base game's tool molds (their generic, non-anvil/helvehammer fallback transform).
+	guiTransform: {
+		translation: { x: 0, y: 3, z: 0 },
+		origin: { x: 0.5, y: 0.0625, z: 0.5 },
+		scale: 1.33
+	},
+	tpHandTransform: {
+		translation: { x: -1, y: -0.6, z: -1.05 },
+		rotation: { x: -87, y: 9, z: 4 },
+		origin: { x: 0.5, y: 0.125, z: 0.5 },
+		scale: 0.5
+	},
+	groundTransform: {
+		translation: { x: 0, y: 0, z: 0 },
+		rotation: { x: 0, y: -45, z: 0 },
+		origin: { x: 0.5, y: 0, z: 0.5 },
+		scale: 2.2
+	}
+}

@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- One level deeper than the usual bin\$(Configuration) so the output lands as a mod folder inside a
+         folder of mods, which is the shape the game's addModPath option wants. Debugging needs that loose
+         copy: the zip below leaves the .pdb out, so breakpoints only bind against this one. -->
+    <OutputPath>bin\$(Configuration)\Mods\mod</OutputPath>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <AssemblyName>Seamarks</AssemblyName>
+    <RootNamespace>Seamarks</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Read .env from the workspace root (one level up, shared with CakeBuild) for VINTAGE_STORY_PATH /
+       MODS_PATH, matching the convention used by the other mods in this repo. An explicit env var or
+       MSBuild property still wins (the Condition only fills the value when it is not already set). -->
+  <PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)\..\.env')">
+    <_EnvText>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\..\.env'))</_EnvText>
+    <VINTAGE_STORY_PATH Condition=" '$(VINTAGE_STORY_PATH)' == '' ">$([System.Text.RegularExpressions.Regex]::Match('$(_EnvText)', '(?m)^VINTAGE_STORY_PATH\s*=\s*(.+)$').Groups[1].Value.Trim())</VINTAGE_STORY_PATH>
+    <MODS_PATH Condition=" '$(MODS_PATH)' == '' ">$([System.Text.RegularExpressions.Regex]::Match('$(_EnvText)', '(?m)^MODS_PATH\s*=\s*(.+)$').Groups[1].Value.Trim())</MODS_PATH>
+  </PropertyGroup>
+
+  <!-- Game assemblies. -->
+  <ItemGroup Condition=" '$(VINTAGE_STORY_PATH)' != '' ">
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VINTAGE_STORY_PATH)\VintagestoryAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VintagestoryLib">
+      <HintPath>$(VINTAGE_STORY_PATH)\VintagestoryLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <!-- Needed for Vintagestory.GameContent.BlockLiquidContainerBase (bucket/jug fuel loading),
+         ItemFirestarter/BlockBehaviorCanIgnite (torch/firestarter ignition for the Fire tier),
+         ItemMetalPlate (gold/silver/electrum plates), and Mechanics.BEBehaviorMPBase/MechanicalNetwork
+         (sensing a turning shaft below for the OilLamp pulse) -->
+    <Reference Include="VSSurvivalMod">
+      <HintPath>$(VINTAGE_STORY_PATH)\Mods\VSSurvivalMod.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <!-- Needed for Vintagestory.GameContent.WeatherSystemBase (rain auto-extinguish for the Fire tier) -->
+    <Reference Include="VSEssentials">
+      <HintPath>$(VINTAGE_STORY_PATH)\Mods\VSEssentials.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>$(VINTAGE_STORY_PATH)\Lib\protobuf-net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(VINTAGE_STORY_PATH)\Lib\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="cairo-sharp">
+      <HintPath>$(VINTAGE_STORY_PATH)\Lib\cairo-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="modinfo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="assets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**\*.cs" />
+    <Compile Remove="bin\**\*.cs" />
+  </ItemGroup>
+
+  <Target Name="FailIfNoVsRefs" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(VINTAGE_STORY_PATH)\VintagestoryAPI.dll')"
+           Text="Vintage Story assemblies not found. Set VINTAGE_STORY_PATH (env var or property) to your install folder containing VintagestoryAPI.dll. Current: '$(VINTAGE_STORY_PATH)'" />
+  </Target>
+
+  <!-- Package the Debug build as a mod zip into this project's bin/ folder, then also copy it into the
+       game Mods folder (MODS_PATH from .env) for testing. Old zips for this modid are cleared first in
+       both locations so a version bump leaves no orphans. The copy is skipped when MODS_PATH is unset/missing. -->
+  <Target Name="ZipDebugBuild" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
+    <Exec Command="powershell -NoProfile -Command &quot;&amp; { Add-Type -AssemblyName System.IO.Compression; Add-Type -AssemblyName System.IO.Compression.FileSystem; $src = [System.IO.Path]::GetFullPath('$(TargetDir)'); if (-not $src.EndsWith([System.IO.Path]::DirectorySeparatorChar)) { $src += [System.IO.Path]::DirectorySeparatorChar }; $info = Get-Content '$(MSBuildProjectDirectory)\modinfo.json' | ConvertFrom-Json; $modId = $info.modid; if (-not $modId) { $modId = '$(AssemblyName)' }; $ver = $info.version; if (-not $ver) { $ver = 'dev' }; $destDir = Join-Path '$(MSBuildProjectDirectory)' 'bin'; if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir | Out-Null }; Get-ChildItem -Path $destDir -Filter ($modId + '-*-Debug.zip') -ErrorAction SilentlyContinue | Remove-Item -Force; $zip = Join-Path $destDir ($modId + '-' + $ver + '-Debug.zip'); $stream = [System.IO.File]::Open($zip, [System.IO.FileMode]::Create); $archive = New-Object System.IO.Compression.ZipArchive($stream, ([System.IO.Compression.ZipArchiveMode]::Create), $false); try { Get-ChildItem -Path $src -Recurse -File | Where-Object { $_.Extension -ne '.pdb' -and $_.Extension -ne '.zip' -and $_.Name -notlike '*.deps.json' } | ForEach-Object { $entryName = $_.FullName.Substring($src.Length).Replace([char][System.IO.Path]::DirectorySeparatorChar, [char]'/'); [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $_.FullName, $entryName, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null } } finally { $archive.Dispose(); $stream.Dispose() }; $modsPath = '$(MODS_PATH)'; if ($modsPath -and (Test-Path $modsPath)) { Get-ChildItem -Path $modsPath -Filter ($modId + '-*-Debug.zip') -ErrorAction SilentlyContinue | Remove-Item -Force; Copy-Item -Path $zip -Destination (Join-Path $modsPath ($modId + '-' + $ver + '-Debug.zip')) -Force } }&quot;" />
+  </Target>
+
+</Project>

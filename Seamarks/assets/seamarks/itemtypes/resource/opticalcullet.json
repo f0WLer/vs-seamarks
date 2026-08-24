@@ -1,0 +1,43 @@
+{
+	code: "opticalcullet",
+	// Crushed lead glass, meltable by Glassmaking (github.com/Xytabich/glassmaking) into the matching
+	// seamarks:{glasstype} melt. Inert without that mod installed, since nothing else reads the
+	// glassmaking:glassblend attribute below.
+	variantgroups: [
+		{ code: "glasstype", loadFromProperties: "seamarks:abstract/glasstype" }
+	],
+	attributes: {
+		"glassmaking:glassblend": {
+			code: "seamarks:{glasstype}",
+			amount: 100
+		}
+	},
+	shape: { base: "glassmaking:item/resource/crushed/glassshards" },
+	// Same vanilla stained-glass reuse as the finished lenspanel, so the cullet already shows the color
+	// it'll melt into.
+	texturesByType: {
+		"*-clearoptical": { "material": { base: "game:block/glass/plain" } },
+		"*-redoptical": { "material": { base: "game:block/glass/red" } },
+		"*-greenoptical": { "material": { base: "game:block/glass/green" } },
+		"*-amberoptical": { "material": { base: "game:block/glass/yellow" } }
+	},
+	maxstacksize: 64,
+	materialDensity: 500,
+	creativeinventory: { "general": ["*"] },
+	guiTransform: {
+		translation: { x: 4.27, y: 11, z: 0 },
+		rotation: { x: 158, y: 45, z: 0 },
+		origin: { x: 0.5, y: 0, z: 0.5 },
+		scale: 2
+	},
+	tpHandTransform: {
+		translation: { x: -1.44, y: -1.05, z: -0.96 },
+		rotation: { x: -172.08531, y: -117.6548, z: -144.27411 },
+		scale: 0.4
+	},
+	groundTransform: {
+		translation: { x: 0, y: 0.32, z: 0 },
+		rotation: { x: -180, y: 0, z: -179.99995 },
+		scale: 3
+	}
+}

@@ -1,0 +1,16 @@
+[
+	{
+		// None of A-D feed a name substitution into the output, so the cobblestone and clayplanter
+		// wildcards stay unconstrained; the rod and plate are pinned to copper only.
+		ingredientPattern: "ABA,BCB,ADA",
+		ingredients: {
+			"A": { type: "block", code: "game:cobblestone-*" },
+			"B": { type: "item", code: "game:rod-copper" },
+			"C": { type: "block", code: "game:clayplanter-*-fired" },
+			"D": { type: "item", code: "game:metalplate-copper" }
+		},
+		width: 3,
+		height: 3,
+		output: { type: "block", code: "seamarks:beacon-fire-unlit" }
+	}
+]

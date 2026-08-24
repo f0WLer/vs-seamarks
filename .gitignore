@@ -1,0 +1,9 @@
+.env
+bin/
+obj/
+*.user
+Releases/
+
+# Generated from .vscode/launch.json.template by Generate-LaunchJson.ps1; bakes in a machine-specific
+# game install path, so it stays local like .env does. See README's "Building from source" section.
+.vscode/launch.json

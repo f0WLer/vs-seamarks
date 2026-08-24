@@ -1,0 +1,218 @@
+{
+	"version": 0,
+	"file": "seamarksbeacons.json",
+	"patches": {},
+	"settings": [
+		{
+			"type": "separator",
+			"title": "seamarks:configlib-section-fire"
+		},
+		{
+			"code": "Fire/BaseRangeBlocks",
+			"ingui": "seamarks:configlib-fire-baserange-name",
+			"comment": "seamarks:configlib-fire-baserange-comment",
+			"type": "float",
+			"default": 700.0,
+			"range": { "min": 0.0, "max": 10000.0, "step": 1.0 }
+		},
+		{
+			"code": "Fire/RangePerElevationBlock",
+			"ingui": "seamarks:configlib-fire-rangeperelevation-name",
+			"comment": "seamarks:configlib-fire-rangeperelevation-comment",
+			"type": "float",
+			"default": 4.0,
+			"range": { "min": 0.0, "max": 100.0, "step": 1.0 }
+		},
+		{
+			"code": "Fire/ElevationBonusStart",
+			"ingui": "seamarks:configlib-fire-elevationstart-name",
+			"comment": "seamarks:configlib-fire-elevationstart-comment",
+			"type": "float",
+			"default": 0.0,
+			"range": { "min": 0.0, "max": 256.0, "step": 1.0 }
+		},
+		{
+			"code": "Fire/FalloffStartFraction",
+			"ingui": "seamarks:configlib-fire-falloffstart-name",
+			"comment": "seamarks:configlib-fire-falloffstart-comment",
+			"type": "float",
+			"default": 0.8,
+			"range": { "min": 0.0, "max": 0.99, "step": 0.1 }
+		},
+		{
+			"code": "Fire/FuelBurnTimeMultiplier",
+			"ingui": "seamarks:configlib-fire-fuelburnmultiplier-name",
+			"comment": "seamarks:configlib-fire-fuelburnmultiplier-comment",
+			"type": "float",
+			"default": 1.0,
+			"range": { "min": 0.0, "max": 10.0, "step": 0.01 }
+		},
+		{
+			"code": "Fire/MaxFuelHours",
+			"ingui": "seamarks:configlib-fire-maxfuelhours-name",
+			"comment": "seamarks:configlib-fire-maxfuelhours-comment",
+			"type": "float",
+			"default": 24.0,
+			"range": { "min": 0.0, "max": 720.0, "step": 1.0 }
+		},
+		{
+			"code": "Fire/RainDouseEnabled",
+			"ingui": "seamarks:configlib-fire-raindouse-name",
+			"comment": "seamarks:configlib-fire-raindouse-comment",
+			"type": "boolean",
+			"default": true
+		},
+		{
+			"code": "Fire/RequiresFuel",
+			"ingui": "seamarks:configlib-fire-requiresfuel-name",
+			"comment": "seamarks:configlib-fire-requiresfuel-comment",
+			"type": "boolean",
+			"default": true
+		},
+		{
+			"code": "Fire/BlipSizeScale",
+			"ingui": "seamarks:configlib-fire-blipsizescale-name",
+			"comment": "seamarks:configlib-fire-blipsizescale-comment",
+			"type": "float",
+			"default": 1.0,
+			"range": { "min": 0.1, "max": 5.0, "step": 0.1 }
+		},
+		{
+			"type": "separator",
+			"title": "seamarks:configlib-section-oillamp"
+		},
+		{
+			"code": "OilLamp/BaseRangeBlocks",
+			"ingui": "seamarks:configlib-oil-baserange-name",
+			"comment": "seamarks:configlib-oil-baserange-comment",
+			"type": "float",
+			"default": 1000.0,
+			"range": { "min": 0.0, "max": 10000.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/RangePerElevationBlock",
+			"ingui": "seamarks:configlib-oil-rangeperelevation-name",
+			"comment": "seamarks:configlib-oil-rangeperelevation-comment",
+			"type": "float",
+			"default": 4.0,
+			"range": { "min": 0.0, "max": 100.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/ElevationBonusStart",
+			"ingui": "seamarks:configlib-oil-elevationstart-name",
+			"comment": "seamarks:configlib-oil-elevationstart-comment",
+			"type": "float",
+			"default": 0.0,
+			"range": { "min": 0.0, "max": 256.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/FalloffStartFraction",
+			"ingui": "seamarks:configlib-oil-falloffstart-name",
+			"comment": "seamarks:configlib-oil-falloffstart-comment",
+			"type": "float",
+			"default": 0.8,
+			"range": { "min": 0.0, "max": 0.99, "step": 0.1 }
+		},
+		{
+			"code": "OilLamp/MaxFuelLitres",
+			"ingui": "seamarks:configlib-oil-maxfuellitres-name",
+			"comment": "seamarks:configlib-oil-maxfuellitres-comment",
+			"type": "float",
+			"default": 4.0,
+			"range": { "min": 0.0, "max": 100.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/FuelHoursPerLitre",
+			"ingui": "seamarks:configlib-oil-fuelhoursperlitre-name",
+			"comment": "seamarks:configlib-oil-fuelhoursperlitre-comment",
+			"type": "float",
+			"default": 6.0,
+			"range": { "min": 0.0, "max": 100.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/RequiresFuel",
+			"ingui": "seamarks:configlib-oil-requiresfuel-name",
+			"comment": "seamarks:configlib-oil-requiresfuel-comment",
+			"type": "boolean",
+			"default": true
+		},
+		{
+			"code": "OilLamp/HousingRangeBonus",
+			"ingui": "seamarks:configlib-oil-housingbonus-name",
+			"comment": "seamarks:configlib-oil-housingbonus-comment",
+			"type": "float",
+			"default": 500.0,
+			"range": { "min": 0.0, "max": 10000.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/PlateRangeBonusPerMetal/0",
+			"ingui": "seamarks:configlib-oil-platebonus-gold-name",
+			"comment": "seamarks:configlib-oil-platebonus-gold-comment",
+			"type": "float",
+			"default": 110.0,
+			"range": { "min": 0.0, "max": 2000.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/PlateRangeBonusPerMetal/1",
+			"ingui": "seamarks:configlib-oil-platebonus-silver-name",
+			"comment": "seamarks:configlib-oil-platebonus-silver-comment",
+			"type": "float",
+			"default": 150.0,
+			"range": { "min": 0.0, "max": 2000.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/PlateRangeBonusPerMetal/2",
+			"ingui": "seamarks:configlib-oil-platebonus-electrum-name",
+			"comment": "seamarks:configlib-oil-platebonus-electrum-comment",
+			"type": "float",
+			"default": 250.0,
+			"range": { "min": 0.0, "max": 2000.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/VisualBeamLength",
+			"ingui": "seamarks:configlib-oil-beamlength-name",
+			"comment": "seamarks:configlib-oil-beamlength-comment",
+			"type": "float",
+			"default": 128.0,
+			"range": { "min": 8.0, "max": 256.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/VisualBeamNoHousingLength",
+			"ingui": "seamarks:configlib-oil-beamlengthnohousing-name",
+			"comment": "seamarks:configlib-oil-beamlengthnohousing-comment",
+			"type": "float",
+			"default": 100.0,
+			"range": { "min": 8.0, "max": 256.0, "step": 1.0 }
+		},
+		{
+			"code": "OilLamp/BlipSizeScale",
+			"ingui": "seamarks:configlib-oil-blipsizescale-name",
+			"comment": "seamarks:configlib-oil-blipsizescale-comment",
+			"type": "float",
+			"default": 1.0,
+			"range": { "min": 0.1, "max": 5.0, "step": 0.1 }
+		},
+		{
+			"type": "separator",
+			"title": "seamarks:configlib-section-rotation"
+		},
+		{
+			"code": "SpinTracksWorldTime",
+			"ingui": "seamarks:configlib-rotation-tracksworldtime-name",
+			"comment": "seamarks:configlib-rotation-tracksworldtime-comment",
+			"type": "boolean",
+			"default": true
+		},
+		{
+			"type": "separator",
+			"title": "seamarks:configlib-section-map"
+		},
+		{
+			"code": "ShowBeaconsOnMap",
+			"ingui": "seamarks:configlib-map-showblips-name",
+			"comment": "seamarks:configlib-map-showblips-comment",
+			"type": "boolean",
+			"default": true
+		}
+	]
+}

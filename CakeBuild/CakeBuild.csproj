@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RunWorkingDirectory>$(MSBuildProjectDirectory)</RunWorkingDirectory>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cake.Frosting" Version="6.1.0" />
+    <PackageReference Include="Cake.Json" Version="7.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <!-- Same .env the mod project reads, so the build script resolves VintagestoryAPI from the install the
+       mod actually compiles against. The VINTAGE_STORY variable is the fallback, and on a machine running
+       several game versions it often points somewhere else entirely. -->
+  <PropertyGroup Condition="Exists('$(MSBuildProjectDirectory)\..\.env')">
+    <_EnvText>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\..\.env'))</_EnvText>
+    <VINTAGE_STORY_PATH Condition=" '$(VINTAGE_STORY_PATH)' == '' ">$([System.Text.RegularExpressions.Regex]::Match('$(_EnvText)', '(?m)^VINTAGE_STORY_PATH\s*=\s*(.+)$').Groups[1].Value.Trim())</VINTAGE_STORY_PATH>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(VINTAGE_STORY_PATH)' == '' ">
+    <VINTAGE_STORY_PATH>$(VINTAGE_STORY)</VINTAGE_STORY_PATH>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Copied to the output on purpose, unlike in the mod project: this one is a console app that has to
+         load ModInfo at runtime to read the version out of modinfo.json. -->
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VINTAGE_STORY_PATH)\VintagestoryAPI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="FailIfNoVsRefs" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(VINTAGE_STORY_PATH)\VintagestoryAPI.dll')"
+           Text="Vintage Story assemblies not found. Set VINTAGE_STORY_PATH in ..\.env (or the VINTAGE_STORY env var) to your install folder. Current: '$(VINTAGE_STORY_PATH)'" />
+  </Target>
+</Project>

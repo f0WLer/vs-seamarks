@@ -1,0 +1,44 @@
+[
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "SeamarksLampGlare",
+      "code": "seamarks-lampglare",
+      "quantityframes": 30,
+      "onActivityStopped": "Rewind",
+      "onAnimationEnd": "Repeat",
+      "keyframes": [
+        {
+          "frame": 0,
+          "elements": {
+            "UpperArmR": { "rotationX": 1.0, "rotationY": -10.0, "rotationZ": -119.0 },
+            "LowerArmR": { "rotationX": -75.0, "rotationY": 0.0, "rotationZ": -7.0 }
+          }
+        }
+      ]
+    },
+    "file": "game:shapes/entity/humanoid/seraph-faceless.json"
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "SeamarksLampGlare-fp",
+      "code": "seamarks-lampglare-fp",
+      "quantityframes": 30,
+      "onActivityStopped": "Rewind",
+      "onAnimationEnd": "Repeat",
+      "keyframes": [
+        {
+          "frame": 0,
+          "elements": {
+            "UpperArmR": { "offsetX": -4.0, "offsetY": 0.0, "offsetZ": -2.0, "rotationX": -12.0, "rotationY": -10.0, "rotationZ": -119.0 },
+            "LowerArmR": { "rotationX": -75.0, "rotationY": 0.0, "rotationZ": -7.0 }
+          }
+        }
+      ]
+    },
+    "file": "game:shapes/entity/humanoid/seraph-faceless.json"
+  }
+]

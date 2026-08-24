@@ -1,0 +1,17 @@
+[
+	{
+		// allowedVariants keeps the plate, nails and rod to the three bronzes; a bare wildcard would let
+		// plain iron, gold and the rest qualify too.
+		ingredientPattern: "AAA,BCB,DED",
+		ingredients: {
+			"A": { type: "item", code: "game:metalplate-*", allowedVariants: ["bismuthbronze", "tinbronze", "blackbronze"] },
+			"B": { type: "block", code: "game:glassslab-plain-down-free" },
+			"C": { type: "item", code: "game:flaxfibers", quantity: 4 },
+			"D": { type: "item", code: "game:metalnailsandstrips-*", allowedVariants: ["bismuthbronze", "tinbronze", "blackbronze"] },
+			"E": { type: "item", code: "game:rod-*", allowedVariants: ["bismuthbronze", "tinbronze", "blackbronze"] }
+		},
+		width: 3,
+		height: 3,
+		output: { type: "block", code: "seamarks:beacon-oillamp-unlit" }
+	}
+]

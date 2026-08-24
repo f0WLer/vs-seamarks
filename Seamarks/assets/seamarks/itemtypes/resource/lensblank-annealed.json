@@ -1,0 +1,48 @@
+{
+	code: "lensblank-annealed",
+	// The annealer's output for lensblank-raw. Ready for the glassworking bench, where its four finishing
+	// recipes cut it into a narrow, medium, wide or extra-wide lenspanel.
+	variantgroups: [
+		{ code: "glasstype", loadFromProperties: "seamarks:abstract/glasstype" }
+	],
+	// A fallback for BlockEntityWorkbench.UpdateWorkpieceMatrix, used only if a recipe step doesn't set its
+	// own workpieceTransform: without it, the bench falls back to its own default workpiece pose (upright
+	// and shrunk to scale 0.25, per workpieceTransformByType in Glassmaking's workbench.json), which suits
+	// its own blown/rounded pieces but stood our flat panel on edge instead of laying it on its back. Every
+	// lenspanel-* recipe step sets this same transform directly, since that's read first and isn't subject
+	// to whatever caused the workbench to keep dropping back to its own default mid-recipe; this copy is
+	// just so a lensblank-annealed item never renders wrong if some future step forgets to set its own.
+	attributes: {
+		workbenchItemTransform: {
+			translation: { x: -0.125, y: 0.5, z: 0 },
+			rotation: { x: 90, y: 0, z: 0 },
+			origin: { x: 0.5, y: 0.5, z: 0.5 },
+			scale: 0.8
+		}
+	},
+	shape: { base: "seamarks:item/glass/lenspanel_raw" },
+	// Same vanilla stained-glass reuse as the finished lenspanel, so the blank carries its true color
+	// through annealing and into the glassworking bench.
+	texturesByType: {
+		"*-clearoptical": { "glass": { base: "game:block/glass/plain" } },
+		"*-redoptical": { "glass": { base: "game:block/glass/red" } },
+		"*-greenoptical": { "glass": { base: "game:block/glass/green" } },
+		"*-amberoptical": { "glass": { base: "game:block/glass/yellow" } }
+	},
+	maxstacksize: 16,
+	materialDensity: 2500,
+	creativeinventory: { "general": ["*"] },
+	guiTransform: {
+		translation: { x: 0, y: 2.9, z: 0 },
+		rotation: { x: -22, y: 22, z: 0 },
+		scale: 1.64
+	},
+	tpHandTransform: {
+		translation: { x: -1.02, y: -0.78, z: -0.54 },
+		rotation: { x: 109.17, y: -167.11, z: -84.5 },
+		scale: 0.7
+	},
+	groundTransform: {
+		scale: 3
+	}
+}

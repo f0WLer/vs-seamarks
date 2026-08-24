@@ -1,0 +1,17 @@
+[
+	// Without Glassmaking, glassmaking:castingmold never resolves and the block quietly falls back to a
+	// plain inert Block/no block entity anyway, so this only strips the fields ahead of that fallback
+	// instead of letting the engine log a "no such class registered" pair for every fired color.
+	{
+		op: "remove",
+		path: "/class",
+		file: "blocktypes/lenspanelmold-fired.json",
+		dependsOn: [ { modid: "glassmaking", invert: true } ]
+	},
+	{
+		op: "remove",
+		path: "/entityClass",
+		file: "blocktypes/lenspanelmold-fired.json",
+		dependsOn: [ { modid: "glassmaking", invert: true } ]
+	}
+]

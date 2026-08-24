@@ -1,0 +1,59 @@
+{
+    // Generated file, do not edit by hand: this is the template Generate-LaunchJson.ps1 fills in from
+    // the repo-root .env. Edit .env and re-run the "Sync launch.json from .env" task (or just reopen the
+    // folder, which runs it automatically) instead. The real launch.json this produces is gitignored,
+    // since it bakes in a machine-specific game install path that has no business being committed.
+    //
+    // The mod is loaded loose from Seamarks/bin/Debug/Mods, never from the zip the build also drops in
+    // the game's own Mods folder: the zip carries no .pdb, so breakpoints would not bind. DEBUG_DATA_PATH
+    // is a sandbox that has ConfigLib in it and no copy of seamarks, which keeps the mod from loading twice.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Client (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "__VINTAGE_STORY_PATH__\\Vintagestory.exe",
+            "preLaunchTask": "build",
+            "args": [
+                "--tracelog",
+                "--dataPath",
+                "__DEBUG_DATA_PATH__",
+                "--openWorld" , "SeamarksTesting",
+                // A sequence option: extra mod paths are further values under this one flag, and repeating
+                // the flag makes the parser hand back a null result and crash the client before it opens.
+                "--addModPath",
+                "${workspaceFolder}/Seamarks/bin/Debug/Mods"
+            ],
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Launch Server",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "__VINTAGE_STORY_PATH__\\VintagestoryServer.exe",
+            "preLaunchTask": "build",
+            "args": [
+                "--tracelog",
+                "--dataPath",
+                "__DEBUG_DATA_PATH__",
+                "--addModPath",
+                "${workspaceFolder}/Seamarks/bin/Debug/Mods"
+            ],
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "CakeBuild",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build (Cake)",
+            "program": "${workspaceFolder}/CakeBuild/bin/Debug/CakeBuild.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CakeBuild",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        }
+    ]
+}

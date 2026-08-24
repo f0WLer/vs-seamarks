@@ -1,0 +1,12 @@
+{
+  "type": "code",
+  "modid": "seamarks",
+  "name": "Seamarks -- Beacons & Lighthouses",
+  "description": "Build lighthouses and fire beacons to help navigate the world and its oceans.",
+  "authors": [ "Fowl" ],
+  "version": "1.0.1",
+  "side": "Universal",
+  "dependencies": {
+    "game": "1.22.0"
+  }
+}

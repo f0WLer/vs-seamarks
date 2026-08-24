@@ -1,0 +1,29 @@
+{
+	"editor": {
+		"collapsedPaths": ",Root/Burner/Flame,Root/ChimneyBase,Root/Burner/BurnerLip,Root/Burner,Root/Ref,Root/HalfN,Root/Reflector,Root/HalfN/BottomTrimN,Root/HalfN/TopTrimN,Root/Burner/FuelStem,Root/Base,Root/Burner/ChimneyRing,Root/HalfN2",
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"glass": "block/glass/plain"
+	},
+	"elements": [
+		{
+			"name": "LensPanelN",
+			"from": [ 4.0, 0.0, 7.4 ],
+			"to": [ 12.0, 14.0, 8.6 ],
+			"rotationOrigin": [ 8.0, 0.0, 8.0 ],
+			"faces": {
+				"north": { "texture": "#glass", "uv": [ 0.0, 0.0, 8.0, 14.0 ] },
+				"east": { "texture": "#glass", "uv": [ 0.0, 0.0, 1.0, 14.0 ] },
+				"south": { "texture": "#glass", "uv": [ 0.0, 0.0, 8.0, 14.0 ] },
+				"west": { "texture": "#glass", "uv": [ 0.0, 0.0, 1.0, 14.0 ] },
+				"up": { "texture": "#glass", "uv": [ 0.0, 0.0, 8.0, 1.0 ] },
+				"down": { "texture": "#glass", "uv": [ 0.0, 0.0, 8.0, 1.0 ] }
+			}
+		}
+	]}

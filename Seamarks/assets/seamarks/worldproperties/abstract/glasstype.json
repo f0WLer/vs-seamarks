@@ -1,0 +1,12 @@
+{
+	// Read by Glassmaking (github.com/Xytabich/glassmaking) into its own glass type registry, which scans
+	// every domain's worldproperties/abstract/glasstype.json. This stays in our own domain, separate from
+	// the vanilla property, so these never show up as new variants of plain window glass.
+	code: "abstract/glasstype",
+	variants: [
+		{ code: "clearoptical", meltingPoint: 1350 },
+		{ code: "redoptical", meltingPoint: 1350 },
+		{ code: "greenoptical", meltingPoint: 1350 },
+		{ code: "amberoptical", meltingPoint: 1350 }
+	]
+}

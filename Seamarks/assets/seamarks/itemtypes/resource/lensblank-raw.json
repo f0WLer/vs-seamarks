@@ -1,0 +1,62 @@
+{
+	code: "lensblank-raw",
+	// What the lens panel mold produces: the general lens shape, uncut and unpolished, using its own
+	// blank shape until it's annealed and finished on the glassworking bench. The glassmaking:anneal
+	// attribute is what the annealer scans for; nothing else touches this item.
+	variantgroups: [
+		{ code: "glasstype", loadFromProperties: "seamarks:abstract/glasstype" }
+	],
+	attributes: {
+		// temperature/time are read by BlockEntityAnnealer to run the process and by the handbook to
+		// describe it; both crash on a missing value, so neither is optional despite reading that way.
+		"glassmaking:anneal": {
+			output: { type: "item", code: "seamarks:lensblank-annealed-{glasstype}" },
+			temperature: { min: 450, max: 560 },
+			time: 1800
+		}
+	},
+	// One custom handbook section per color, alongside the "Made by mold casting" entries Glassmaking
+	// already generates from the mold's own castingmold recipe. That mechanism only lists the mold
+	// itself, not what gets melted into it, so this fills that gap. Numbers are copied from
+	// opticalcullet.json's glassblend amount and glasstype.json's meltingPoint; keep them in sync if
+	// either changes.
+	attributesByType: {
+		"*-clearoptical": { handbook: { extraSections: [
+			{ title: "seamarks:handbook-lensblank-meltedfrom-title", text: "seamarks:handbooktext-lensblank-raw-clearoptical" }
+		] } },
+		"*-redoptical": { handbook: { extraSections: [
+			{ title: "seamarks:handbook-lensblank-meltedfrom-title", text: "seamarks:handbooktext-lensblank-raw-redoptical" }
+		] } },
+		"*-greenoptical": { handbook: { extraSections: [
+			{ title: "seamarks:handbook-lensblank-meltedfrom-title", text: "seamarks:handbooktext-lensblank-raw-greenoptical" }
+		] } },
+		"*-amberoptical": { handbook: { extraSections: [
+			{ title: "seamarks:handbook-lensblank-meltedfrom-title", text: "seamarks:handbooktext-lensblank-raw-amberoptical" }
+		] } }
+	},
+	shape: { base: "seamarks:item/glass/lenspanel_raw" },
+	// Same vanilla stained-glass reuse as the finished lenspanel, so a blank already reads in its true
+	// color before it's ever cut.
+	texturesByType: {
+		"*-clearoptical": { "glass": { base: "game:block/glass/plain" } },
+		"*-redoptical": { "glass": { base: "game:block/glass/red" } },
+		"*-greenoptical": { "glass": { base: "game:block/glass/green" } },
+		"*-amberoptical": { "glass": { base: "game:block/glass/yellow" } }
+	},
+	maxstacksize: 16,
+	materialDensity: 2500,
+	creativeinventory: { "general": ["*"] },
+	guiTransform: {
+		translation: { x: 0, y: 2.9, z: 0 },
+		rotation: { x: -22, y: 22, z: 0 },
+		scale: 1.64
+	},
+	tpHandTransform: {
+		translation: { x: -1.02, y: -0.78, z: -0.54 },
+		rotation: { x: 109.17, y: -167.11, z: -84.5 },
+		scale: 0.7
+	},
+	groundTransform: {
+		scale: 3
+	}
+}

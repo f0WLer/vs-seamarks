@@ -1,0 +1,39 @@
+{
+	code: "governor",
+	class: "BlockGovernor",
+	entityClass: "BlockEntityGovernor",
+	// One mechanical node, driving the shaft above. It reads the shaft below without joining it, so a
+	// single node covers both ends and they can turn at different speeds.
+	entityBehaviors: [ { name: "Governor" } ],
+	// Vertical only, so no orientation variants. Power enters underneath and leaves out the top. The
+	// placed block draws nothing of its own: an empty world shape keeps the mechanical-power renderer from
+	// drawing the node twice over, and GovernorRenderer draws the spinning flyball head instead. The
+	// inventory item still shows the head at rest.
+	shape: { base: "seamarks:block/governor/empty" },
+	shapeInventory: { base: "seamarks:block/governor/governor_idle" },
+	// Every pose resolves its faces through here, not the shape's own texture dict, so every key the model
+	// uses has to be declared or those faces render as missing. #null is the modeller's unassigned faces,
+	// pointed at the planks so hidden cap faces don't show up pink.
+	textures: {
+		brass: { base: "game:item/resource/plate/brass" },
+		casewood: { base: "game:block/wood/displaycase/wood" },
+		wood: { base: "game:block/wood/planks/generic" },
+		tin: { base: "game:block/metal/plate/tin" },
+		bismuthbronze: { base: "game:block/metal/plate/bismuthbronze" },
+		bituminous: { base: "game:block/coal/bituminous" },
+		null: { base: "game:block/wood/planks/generic" }
+	},
+	blockmaterial: "Wood",
+	resistance: 3.5,
+	rainPermeable: true,
+	sidesolid: { all: false },
+	sideopaque: { all: false },
+	combustibleProps: {
+		burnTemperature: 600,
+		burnDuration: 20
+	},
+	selectionbox: { x1: 0, y1: 0, z1: 0.3125, x2: 1, y2: 1, z2: 0.6875 },
+	collisionbox: { x1: 0, y1: 0, z1: 0.3125, x2: 1, y2: 1, z2: 0.6875 },
+	groundTransform: { scale: 2 },
+	creativeinventory: { "general": ["*"], "mechanics": ["*"] }
+}

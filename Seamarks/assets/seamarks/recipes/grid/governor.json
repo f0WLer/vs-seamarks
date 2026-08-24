@@ -1,0 +1,20 @@
+[
+	{
+		// tool-wrench catches modded wrenches that carry the tag without following vanilla's own
+		// "wrench-<metal>" naming, and allowedVariants keeps the rod/nails to the three bronzes, matching
+		// the beacon and opticshousing recipes' own convention. Planks are a bare wildcard since any wood
+		// works.
+		ingredientPattern: "ABC,DEF,A_C",
+		ingredients: {
+			"A": { type: "item", code: "game:plank-*" },
+			"B": { type: "item", tags: ["tool-wrench"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "item", code: "game:gear-rusty", quantity: 2 },
+			"D": { type: "block", code: "game:woodenaxle-ud" },
+			"E": { type: "item", code: "game:rod-*", allowedVariants: ["bismuthbronze", "tinbronze", "blackbronze"] },
+			"F": { type: "item", code: "game:metalnailsandstrips-*", allowedVariants: ["bismuthbronze", "tinbronze", "blackbronze"], quantity: 2 }
+		},
+		width: 3,
+		height: 3,
+		output: { type: "block", code: "seamarks:governor" }
+	}
+]

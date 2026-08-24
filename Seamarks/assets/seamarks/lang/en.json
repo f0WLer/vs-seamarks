@@ -1,0 +1,250 @@
+{
+	"game:tabname-seamarks":		"Beacons",
+
+	"seamarks:block-beacon-fire-unlit":		"Fire Beacon (Unlit)",
+	"seamarks:block-beacon-fire-lit":		"Fire Beacon (Lit)",
+	"blockdesc-beacon-fire-unlit":			"A simple open-flame beacon, fed with any firewood or coal and lit with a torch or firestarter. Visible from a short distance out at sea.",
+	"blockdesc-beacon-fire-lit":			"A simple open-flame beacon, fed with any firewood or coal and lit with a torch or firestarter. Visible from a short distance out at sea.",
+
+	"seamarks:block-beacon-oillamp-unlit":	"Oil Lamp Beacon (Unlit)",
+	"seamarks:block-beacon-oillamp-lit": 	"Oil Lamp Beacon (Lit)",
+	"blockdesc-beacon-oillamp-unlit":		"An oil-fed lamp beacon. Accepts an Optics Housing and up to four matching gold, silver, or electrum plates to extend its reach.",
+	"blockdesc-beacon-oillamp-lit":			"An oil-fed lamp beacon. Accepts an Optics Housing and up to four matching gold, silver, or electrum plates to extend its reach.",
+
+	"seamarks:maplayer-beacons":			"Beacons",
+	"seamarks:maplayer-beacon-tier-fire":	"Fire Beacon",
+	"seamarks:maplayer-beacon-tier-oillamp":"Lamp Beacon",
+	"seamarks:maplayer-beacon-hover":		"{0}\n{1}, {2}, {3}",
+
+	"block-opticshousing":					"Optics Housing",
+	"blockdesc-opticshousing":				"A housing for glass optics panels that focuses an oil lamp beacon's light to reach further out to sea. <icon>rightmousebutton</icon> with a wrench to fit up to three Lens Panels (setting its beam count, width, and color).\n<icon>rightmousebutton</icon> a beacon with it in hand to attach, <hk>shift</hk>+<hk>ctrl</hk>+<icon>rightmousebutton</icon> to remove it. Fit at least one panel for the range bonus to apply.",
+
+
+
+	"itemdesc-lenspanel-1":						"A dense Fresnel panel that concentrates light from a lamp beacon into a tight {0} degree beam. Fits into an Optics Housing.",
+	"itemdesc-lenspanel-2":						"A Fresnel panel that concentrates light from a lamp beacon into a {0} degree beam. Fits into an Optics Housing.",
+	"itemdesc-lenspanel-3":						"A Fresnel panel that concentrates light from a lamp beacon into a {0} degree beam. Fits into an Optics Housing.",
+	"itemdesc-lenspanel-4":						"A thick Fresnel panel that concentrates light from a lamp beacon into a broad {0} degree beam. Fits into an Optics Housing.",
+	
+
+	"item-lenspanel-1-clearoptical":			"Clear Lens Panel I",
+	"item-lenspanel-2-clearoptical":			"Clear Lens Panel II",
+	"item-lenspanel-3-clearoptical":			"Clear Lens Panel III",
+	"item-lenspanel-4-clearoptical":			"Clear Lens Panel IV",
+
+	"item-lenspanel-1-redoptical":				"Red Lens Panel I",
+	"item-lenspanel-2-redoptical":				"Red Lens Panel II",
+	"item-lenspanel-3-redoptical":				"Red Lens Panel III",
+	"item-lenspanel-4-redoptical":				"Red Lens Panel IV",
+
+	"item-lenspanel-1-greenoptical":			"Green Lens Panel I",
+	"item-lenspanel-2-greenoptical":			"Green Lens Panel II",
+	"item-lenspanel-3-greenoptical":			"Green Lens Panel III",
+	"item-lenspanel-4-greenoptical":			"Green Lens Panel IV",
+
+	"item-lenspanel-1-amberoptical":			"Amber Lens Panel I",
+	"item-lenspanel-2-amberoptical":			"Amber Lens Panel II",
+	"item-lenspanel-3-amberoptical":			"Amber Lens Panel III",
+	"item-lenspanel-4-amberoptical":			"Amber Lens Panel IV",
+
+	"itemdesc-opticalcullet-*":					"Optical glass blend, ready to melt down for casting an optical beacon lens.",
+	"item-opticalcullet-clearoptical":			"Optical Glass Blend",
+	"item-opticalcullet-redoptical":			"Red Optical Glass Blend",
+	"item-opticalcullet-greenoptical":			"Green Optical Glass Blend",
+	"item-opticalcullet-amberoptical":			"Amber Optical Glass Blend",
+
+
+	"itemdesc-lensblank-raw-*":					"Cast in a lens panel mold, still hot with strain from cooling too fast. Needs annealing.",
+	"item-lensblank-raw-clearoptical":			"Raw Fresnel Lens Blank (Clear)",
+	"item-lensblank-raw-redoptical":			"Raw Fresnel Lens Blank (Red)",
+	"item-lensblank-raw-greenoptical":			"Raw Fresnel Lens Blank (Green)",
+	"item-lensblank-raw-amberoptical":			"Raw Fresnel Lens Blank (Amber)",
+
+	"seamarks:handbook-lensblank-meltedfrom-title":		"Melted from",
+	"seamarks:handbooktext-lensblank-raw-clearoptical":	"400 units of clear optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-clearoptical\">optical glass blend</a> in the glass smeltery.",
+	"seamarks:handbooktext-lensblank-raw-redoptical":	"400 units of red optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-redoptical\">red optical glass blend</a> in the glass smeltery.",
+	"seamarks:handbooktext-lensblank-raw-greenoptical":	"400 units of green optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-greenoptical\">green optical glass blend</a> in the glass smeltery.",
+	"seamarks:handbooktext-lensblank-raw-amberoptical":	"400 units of amber optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-amberoptical\">amber optical glass blend</a> in the glass smeltery.",
+	
+	"itemdesc-lensblank-annealed-*":			"Cooled slowly and free of strain. Ready to shape into a lens panel on the glassworking bench.",
+	"item-lensblank-annealed-clearoptical":		"Annealed Fresnel Lens Blank (Clear)",
+	"item-lensblank-annealed-redoptical":		"Annealed Fresnel Lens Blank (Red)",
+	"item-lensblank-annealed-greenoptical":		"Annealed Fresnel Lens Blank (Green)",
+	"item-lensblank-annealed-amberoptical":		"Annealed Fresnel Lens Blank (Amber)",
+
+	"blockdesc-lenspanelmold-*-raw":			"A bakeable mold to cast raw Fresnel lens panel blanks from molten optical glass",
+	"block-lenspanelmold-red-raw":				"Raw red clay lens panel mold",
+	"block-lenspanelmold-blue-raw":				"Raw blue clay lens panel mold",
+	"block-lenspanelmold-fire-raw":				"Raw fire clay lens panel mold",
+
+	"block-lenspanelmold-blue-fired":			"Earthy brown ceramic lens panel mold",
+	"block-lenspanelmold-black-fired":			"Black ceramic lens panel mold",
+	"block-lenspanelmold-brown-fired":			"Brown ceramic lens panel mold",
+	"block-lenspanelmold-cream-fired":			"Cream ceramic lens panel mold",
+	"block-lenspanelmold-fire-fired":			"Fireclay ceramic lens panel mold",
+	"block-lenspanelmold-gray-fired":			"Gray ceramic lens panel mold",
+	"block-lenspanelmold-orange-fired":			"Orange ceramic lens panel mold",
+	"block-lenspanelmold-red-fired":			"Red ceramic lens panel mold",
+	"block-lenspanelmold-tan-fired":			"Tan ceramic lens panel mold",
+	"block-lenspanelmold-earthyorange-fired":	"Earthy orange ceramic lens panel mold",
+
+	"seamarks:blockhelp-housing-open":			"Open panel slots (requires wrench)",
+	"seamarks:blockhelp-housing-pickup":		"Pick up",
+
+	"seamarks:gui-housing-title":				"Optics Housing",
+	"seamarks:gui-housing-nolens":				"No Lens",
+	"seamarks:gui-housing-beam":				"Beam {0}",
+	"seamarks:gui-housing-beamspec":			"{0:0}° / {1:0.0}s flash",
+	"seamarks:gui-housing-beamspec-note":		"(@ 1rps)",
+	"seamarks:gui-housing-lensname-1":			"Type I",
+	"seamarks:gui-housing-lensname-2":			"Type II",
+	"seamarks:gui-housing-lensname-3":			"Type III",
+	"seamarks:gui-housing-lensname-4":			"Type IV",
+
+	"block-governor":							"Governor",
+	"blockdesc-governor":						"Sits in a line of shafts and caps the speed passed through it. Power enters from below and leaves through the top, held to the set maximum however fast the source runs. Anything slower than the cap passes straight through.",
+	"seamarks:info-governor":					"In: {0:0.##} rps - Cap {1:0.##} rps - Out: {2:0.##} rps",
+	"seamarks:gui-governor-title":				"Governor",
+	"seamarks:gui-governor-value":				"Maximum speed: {0:0.##} rps",
+	"seamarks:blockhelp-governor-setspeed":		"Set maximum speed",
+
+	"seamarks:notify-housing-attached": 		"Attached the Optics Housing ({0}), beacon range increased.",
+	"seamarks:notify-housing-already-attached":	"This beacon already has an Optics Housing attached.",
+	"seamarks:notify-housing-detached": 		"Removed the Optics Housing.",
+	"seamarks:notify-housing-not-attached": 	"This beacon has no Optics Housing attached.",
+
+
+	"seamarks:notify-fuel-added-solid":			"Added fuel, {0:0.#} hours available. {1}",
+	"seamarks:notify-fuel-added-liquid":		"Added {0:0.##}L of fuel, {1:0.#} hours available.",
+	"seamarks:notify-fuel-full": 				"This beacon's fuel reservoir is full.",
+	"seamarks:notify-no-fuel": 					"No fuel loaded.",
+	"seamarks:notify-fuel-no-space":			"Not enough space for that fuel. This beacon holds at most {0:0.#} hours of fuel.",
+	"seamarks:blockinfo-visible-range":			"Visible up to {0} blocks away",
+	"seamarks:blockinfo-fuel-solid":			"Fuel: {0:0.#}hrs",
+	"seamarks:blockinfo-fuel-liquid":			"Fuel: {0:0.##}L - {1:0.#}hrs",
+	"seamarks:blockinfo-fuel-notrequired":		"Burns without fuel",
+	"seamarks:blockinfo-everburning":			"Set to burn forever",
+
+
+	"seamarks:notify-lit":						"Beacon lit, burning for {0:0.#} more hours.",
+	"seamarks:notify-lit-nofuel":				"Beacon lit.",
+	"seamarks:notify-extinguished":				"Beacon extinguished.",
+	"seamarks:notify-needs-torch":				"This beacon needs a torch or firestarter to light it.",
+	"seamarks:hint-ignite-oillamp":				"<icon>rightmousebutton</icon> with an empty hand to light it.",
+	"seamarks:blockhelp-light-fire":			"Light with torch",
+	"seamarks:blockhelp-fire-extinguish":		"Put out the fire",
+	"seamarks:hint-ignite-fire":				"Use a torch or firestarter to light it.",
+	"seamarks:blockhelp-beacon-ignite":			"Light lamp",
+	"seamarks:blockhelp-beacon-extinguish":		"Put out lamp",
+	"seamarks:blockhelp-beacon-attachhousing":	"Fit optics housing",
+	"seamarks:blockhelp-beacon-detachhousing":	"Remove optics housing",
+	
+	
+	"seamarks:notify-plate-added":				"Added a {0} plate ({1}/{2}).",
+	"seamarks:notify-plate-mismatch":			"This beacon already has {0} plates attached. Remove them first.",
+	"seamarks:notify-plate-max":				"This beacon already has the maximum number of plates.",
+	"seamarks:notify-plate-removed":			"Removed a {0} plate ({1} remaining).",
+	"seamarks:notify-plate-none":				"This beacon has no plates attached.",
+	
+
+    "seamarks:craftinginfo-seamarks-title":		"Beacons & Lighthouses",
+    "seamarks:craftinginfo-seamarks-text":		"<strong><font size=\"24\">Seamarks: Beacons & Lighthouses</font>\nby Fowl</strong>\n\n<font size=\"20\">Fire Beacons</font>\nSimple <a href=\"handbook://block-seamarks:beacon-fire-unlit\">Fire Beacons</a> are fueled with any coal, firewood, or peat and ignited with a torch or firestarter to burn for up to 24hrs. They can be seen from a few hundred blocks away.\n\n<font size=\"20\">Oil Lamp Beacons</font>\n<a href=\"handbook://block-seamarks:beacon-oillamp-unlit\">Oil Lamp Beacons</a> are fueled only by oils. They're much brighter than fire beacons and produce light that can be seen from up to a thousand blocks away without any enhancements. This range can be extended to another thousand blocks by adding up to four gold, silver, or electrum plates and affixing an <a href=\"handbook://block-seamarks:opticshousing\">Optics Housing</a> overtop. A beacon's range also extends by four blocks for every block above y-level=0 that it's sitting at. This can be adjusted live along with most other parameters with Config Lib.\n\nBy default, these beacons have a single reflector which casts light in one direction (facing the player when placed down) and at far distances can only be viewed from this direction. Attaching an Optics Housing with multiple lenses will produce multiple beams which can be seen from many directions. Supplying mechanical power to the bottom of the beacon like an automated <a href=\"handbooksearch://quern\">quern</a> will make the reflector/housing spin, causing its light to be visible from all directions.\n\nThe <a href=\"handbook://block-seamarks:governor\">Governor</a> can be used to cap the spin of the reflector/housing.",
+
+
+
+	"seamarks:configlib-section-fire":						"Fire Beacon",
+
+	"seamarks:configlib-fire-baserange-name":				"Base range (blocks)",
+	"seamarks:configlib-fire-baserange-comment":			"How far a fire beacon reaches sitting at sea level (before any height bonus).",
+	
+	"seamarks:configlib-fire-rangeperelevation-name":		"Range per block of height",
+	"seamarks:configlib-fire-rangeperelevation-comment":	"Extra blocks of range for each block the beacon stands above the height below. Set to 0 to make placement height count for nothing.",
+	
+	"seamarks:configlib-fire-elevationstart-name":			"Height bonus starts at",
+	"seamarks:configlib-fire-elevationstart-comment":		"Height above sea level where the range-per-height bonus begins. A beacon below this only gets the base range.",
+	
+	"seamarks:configlib-fire-falloffstart-name":			"Fade starts at (%)",
+	"seamarks:configlib-fire-falloffstart-comment":			"Fraction of the maximum range where the distant marker starts to dim.",
+	
+	"seamarks:configlib-fire-fuelburnmultiplier-name":		"Fuel burn time multiplier",
+	"seamarks:configlib-fire-fuelburnmultiplier-comment":	"Scales how long each piece of solid fuel burns. 2 makes every fuel last twice as long.",
+	
+	"seamarks:configlib-fire-maxfuelhours-name":			"Fuel capacity (hours)",
+	"seamarks:configlib-fire-maxfuelhours-comment":			"Maximum burn time a fire beacon can hold at once.",
+	
+	"seamarks:configlib-fire-raindouse-name":				"Rain puts it out",
+	"seamarks:configlib-fire-raindouse-comment":			"When on, heavy rain with open sky above can extinguish a lit fire beacon.",
+	
+	"seamarks:configlib-fire-requiresfuel-name":			"Requires fuel",
+	"seamarks:configlib-fire-requiresfuel-comment":			"When off, a fire beacon lights with no fuel and stays lit forever (fuelling still works, it just isn't needed).",
+	
+	"seamarks:configlib-fire-blipsizescale-name":			"Distant marker size",
+	"seamarks:configlib-fire-blipsizescale-comment":		"Scales the size of the distant light marker (and its smoke marker). 1 is the default size.",
+
+
+
+	"seamarks:configlib-section-oillamp":					"Oil Lamp Beacon",
+
+	"seamarks:configlib-oil-baserange-name":				"Base range (blocks)",
+	"seamarks:configlib-oil-baserange-comment":				"How far an oil lamp beacon reaches sitting at sea level (before plates housing or height bonuses).",
+	
+	"seamarks:configlib-oil-rangeperelevation-name":		"Range per block of height",
+	"seamarks:configlib-oil-rangeperelevation-comment":		"Extra blocks of range for each block the beacon stands above the height below. Set to 0 to disable the bonus.",
+	
+	"seamarks:configlib-oil-elevationstart-name":			"Height bonus starts at",
+	"seamarks:configlib-oil-elevationstart-comment":		"Height above sea level where the range-per-height bonus begins. A beacon below this only gets the base range.",
+	
+	"seamarks:configlib-oil-falloffstart-name":				"Fade starts at (%)",
+	"seamarks:configlib-oil-falloffstart-comment":			"Fraction of the maximum range where the distant marker starts to dim.",
+	
+	"seamarks:configlib-oil-maxfuellitres-name":			"Tank size (litres)",
+	"seamarks:configlib-oil-maxfuellitres-comment":			"Maximum oil an oil lamp beacon can hold. With hours-per-litre this sets its longest burn.",
+	
+	"seamarks:configlib-oil-fuelhoursperlitre-name":		"Burn hours per litre",
+	"seamarks:configlib-oil-fuelhoursperlitre-comment":		"How many hours of light one litre of oil fuels.",
+	
+	"seamarks:configlib-oil-requiresfuel-name":				"Requires fuel",
+	"seamarks:configlib-oil-requiresfuel-comment":			"When off, an oil lamp beacon lights with no oil and stays lit forever (fuelling still works, it just isn't needed).",
+	
+	"seamarks:configlib-oil-housingbonus-name":				"Optics Housing range bonus",
+	"seamarks:configlib-oil-housingbonus-comment":			"Range added by a fitted Optics Housing.",
+	
+	"seamarks:configlib-oil-platebonus-gold-name":			"Gold plate range bonus",
+	"seamarks:configlib-oil-platebonus-gold-comment":		"Range added per gold plate (plates stack with diminishing returns).",
+	
+	"seamarks:configlib-oil-platebonus-silver-name":		"Silver plate range bonus",
+	"seamarks:configlib-oil-platebonus-silver-comment":		"Range added per silver plate. (plates stack with diminishing returns).",
+	
+	"seamarks:configlib-oil-platebonus-electrum-name":		"Electrum plate range bonus",
+	"seamarks:configlib-oil-platebonus-electrum-comment":	"Range added per electrum plate. (plates stack with diminishing returns).",
+	
+	"seamarks:configlib-oil-beamlength-name":				"Beam length with housing (blocks)",
+	"seamarks:configlib-oil-beamlength-comment":			"How far the focused beam draws when an Optics Housing is fitted (look only, no effect on range).",
+	
+	"seamarks:configlib-oil-beamlengthnohousing-name":		"Beam length without housing (blocks)",
+	"seamarks:configlib-oil-beamlengthnohousing-comment":	"How far the bare lamp's beam draws with no housing (look only, no effect on range).",
+	
+	"seamarks:configlib-oil-blipsizescale-name":			"Distant marker size",
+	"seamarks:configlib-oil-blipsizescale-comment":			"Scales the size of the distant light marker (1 is the default size).",
+	
+
+
+	"seamarks:configlib-section-rotation":					"Rotation",
+
+	"seamarks:configlib-rotation-tracksworldtime-name":		"Beacon turns on world time",
+	"seamarks:configlib-rotation-tracksworldtime-comment":	"When on, a driven beacon follows the world clock, so it stops with /time stop and hurries when time is sped up. Turn it off and the optic keeps turning at its normal rate whatever the world clock is doing. Fuel still burns on world time either way.",
+
+
+	"seamarks:configlib-section-map":						"Map",
+
+	"seamarks:configlib-map-showblips-name":				"Show beacons on the map",
+	"seamarks:configlib-map-showblips-comment":				"When on, every lit beacon appears on the world map's Beacons layer. Turn it off to keep beacon locations off the map.",
+
+
+
+	"seamarks:cmd-error-notlookingatblock": 	"Not looking at a block.",
+	"seamarks:cmd-error-notlookingatbeacon": 	"Not looking at a beacon.",
+	"seamarks:cmd-error-nohousing": 			"Look at an Optics Housing, either placed down or fitted to a beacon.",
+	"seamarks:cmd-eternal-on": 					"This beacon will now burn forever, needing no fuel.",
+	"seamarks:cmd-eternal-off": 				"This beacon burns normally again and will use fuel."
+}

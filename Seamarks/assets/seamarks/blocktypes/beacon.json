@@ -1,0 +1,197 @@
+{
+	code: "beacon",
+	class: "BlockBeacon",
+	entityClass: "BlockEntityBeacon",
+	entityBehaviorsByType: {
+		"beacon-fire-*": [ { name: "BeaconRainDouse" } ],
+		"beacon-oillamp-*": [ { name: "BeaconReflector" }, { name: "BeaconBeam" }, { name: "BeaconSound" } ]
+	},
+	// No MPConsumer behavior here on purpose. Registering as a mechanical consumer hands the block to
+	// the engine's mech renderer, which redraws it from the base shape and throws our scale away.
+	// BEBehaviorBeaconBeam reads the shaft below directly instead.
+	variantgroups: [
+		{ code: "tier", states: ["fire", "oillamp"] },
+		// Light only exists while burning, so lit/unlit are separate variants swapped with ExchangeBlock,
+		// the same trick the firepit uses. A per-instance light override can't trigger a relight pass.
+		{ code: "lit", states: ["unlit", "lit"] }
+	],
+	// scale is a uniform 3-axis multiplier applied about the block's own horizontal center
+	// (ShapeTesselator's constantCenterXZ), not the corner, so no offsetX/offsetZ is needed: firebeacon's
+	// own footprint is already centered in its source shape, and doubling it in place fills exactly the
+	// one block it now occupies. offsetX/offsetZ:0.5 was needed only for the old 2x2 footprint, to push
+	// the doubled-but-still-centered model out to that area's true center; it now overshoots into the
+	// neighboring block instead, which is what the visible drift after this shrink turned out to be.
+	//
+	// BlockEntityBeacon re-adds the OilLamp's Reflector as its own mesh turned to the beam heading, so
+	// ignoreElements has to drop it here or it draws twice. VS_Gear rides along with it for the same
+	// reason: it spins with the live sweep, not the block's fixed placement heading.
+	// The Fuel node (coal/log/stick pile) isn't split by lit/unlit here at all: whether it shows tracks
+	// the actual remaining fuel pool, which can outlast a hand-extinguish, so BlockEntityBeacon.OnTesselation
+	// drops it from a fresh tesselation itself once the pool reads empty, with no fixed variant swap involved.
+	shapeByType: {
+		"beacon-oillamp-unlit": { base: "seamarks:block/lighthouse/argandbeacon", ignoreElements: ["Reflector", "VS_Gear", "Flame"] },
+		"beacon-oillamp-lit": { base: "seamarks:block/lighthouse/argandbeacon", ignoreElements: ["Reflector", "VS_Gear"] },
+		"beacon-fire-*": { base: "seamarks:block/firebeacon", scale: 2 }
+	},
+	// The placed block drops the Reflector from its own mesh and draws it separately, turned to the beam
+	// heading, so the icon would otherwise show a lamp with a hole where the optic sits. The inventory
+	// keeps the Reflector and drops only the Flame, so the icon reads as a whole unlit lamp. Fire has no
+	// entry here and falls back to its own shape.
+	shapeInventoryByType: {
+		"beacon-oillamp-*": { base: "seamarks:block/lighthouse/argandbeacon", ignoreElements: ["Flame"] }
+	},
+	// Texture keys live here because Model Creator rewrites a shape's embedded textures to absolute local
+	// paths every time it saves, and those don't resolve at runtime.
+	// Survival content is exposed under the "game" domain (there is no "survival:" domain).
+	texturesByType: {
+		"beacon-oillamp-*": {
+			"candle": { base: "game:block/candle" },
+			"bituminous": { base: "game:block/coal/bituminous" },
+			"plain": { base: "game:block/glass/plain" },
+			"brass2": { base: "game:block/metal/tarnished/brass" },
+			"wood": { base: "game:block/wood/displaycase/wood" },
+			"white": { base: "game:item/armor/cloth/white" },
+			"brass": { base: "game:item/resource/plate/brass" }
+		},
+		// These codes come from the firebeacon shape.
+		"beacon-fire-*": {
+			"ceramic-dark": { base: "game:block/clay/ceramic-dark" },
+			"copper": { base: "game:entity/humanoid/seraphclothes/neck/metal/coppertarnished" },
+			"basalt1": { base: "game:block/stone/rock/basalt1" },
+			"coal": { base: "game:block/coal/charcoal" },
+			"log": { base: "game:block/wood/firewood/aged/bark" },
+			"stick": { base: "game:block/wood/firewood/bark" }
+		}
+	},
+	// cposition {0,0,0} makes the clicked cell the controller, and the one cell above fills with the
+	// engine's invisible filler block, which forwards interaction and breaking back here. offsetHitboxes
+	// makes both cells report the one combined box below instead of each defaulting to its own full
+	// 1x1x1: the model only reaches partway up its second block, so a full box up there would let a
+	// player stand on empty air above the fire.
+	behaviorsByType: {
+		"beacon-fire-*": [
+			{ name: "Multiblock", properties: { sizex: 1, sizey: 2, sizez: 1, cposition: { x: 0, y: 0, z: 0 }, offsetHitboxes: true } }
+		]
+	},
+	// The combined box for both fire beacon cells: solid through the whole bottom block, then only the
+	// bottom half of the block above, matching how far the model actually reaches.
+	selectionboxesByType: {
+		"beacon-fire-*": [
+			{ x1: 0, y1: 0, z1: 0, x2: 1, y2: 1, z2: 1 },
+			{ x1: 0, y1: 1, z1: 0, x2: 1, y2: 1.5, z2: 1 }
+		]
+	},
+	collisionboxesByType: {
+		"beacon-fire-*": [
+			{ x1: 0, y1: 0, z1: 0, x2: 1, y2: 1, z2: 1 },
+			{ x1: 0, y1: 1, z1: 0, x2: 1, y2: 1.5, z2: 1 }
+		]
+	},
+	lightHsvByType: {
+		"beacon-fire-lit": [5, 6, 20],
+		"beacon-oillamp-lit": [10, 5, 24]
+	},
+	// posOffset is measured from (0.5, 1.0, 0.5), the controller cell's own top-center. Oillamp is smoke
+	// only: anything spawned inside the glass chimney gets depth-culled behind the glass faces, so the
+	// fire itself is the emissive Flame mesh element, and only smoke clears the chimney top into open air.
+	// Fire has no glass in the way, so it gets the full embers/smoke/flame set, centered over the bowl
+	// (the controller cell's own top-center already lands there now that the footprint is 1x1) and
+	// nudged down to sit just inside its rim instead of hovering above it.
+	particlePropertiesByType: {
+		"beacon-oillamp-lit": [
+			{
+				"hsvaColor": [ { "avg": 0, "var": 0 }, { "avg": 0, "var": 0 }, { "avg": 70, "var": 20 }, { "avg": 55, "var": 20 } ],
+				"posOffset": [ { "avg": 0.0, "var": 0.04 }, { "avg": -0.22, "var": 0.02 }, { "avg": 0.1, "var": 0.04 } ],
+				"velocity": [ { "avg": 0.0, "var": 0.02 }, { "avg": 0.07, "var": 0.02 }, { "avg": 0.0, "var": 0.02 } ],
+				"quantity": { "avg": 0.04, "var": 0.02 },
+				"size": { "avg": 0.3, "var": 0.1 },
+				"sizeEvolve": { "transform": "linear", "factor": 0.3 },
+				"lifeLength": { "avg": 5.0, "var": 1.0 },
+				"gravityEffect": { "avg": -0.005, "var": 0.0 },
+				"opacityEvolve": { "transform": "quadratic", "factor": -20 },
+				"particleModel": "Quad",
+				"vertexFlags": 0,
+				"terrainCollision": false,
+				"windAffectednes": 0.4
+			}
+		],
+		"beacon-fire-lit": [
+			{
+				// Embers
+				"hsvaColor": [ { "avg": 30, "var": 20 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 0 } ],
+				"gravityEffect": { "dist": "invexp", "avg": -0.1, "var": 0.4 },
+				"posOffset": [ { "avg": 0.0, "var": 0.4 }, { "avg": -0.4, "var": 0 }, { "avg": 0.0, "var": 0.4 } ],
+				"velocity": [ { "avg": 0.0, "var": 0.15 }, { "avg": 0.5, "var": 0.1 }, { "avg": 0.0, "var": 0.15 } ],
+				"quantity": { "avg": 0.015 },
+				"size": { "avg": 0.8, "var": 0 },
+				"sizeEvolve": { "transform": "quadratic", "factor": -0.7 },
+				"lifeLength": { "avg": 1.5 },
+				"vertexFlags": 128,
+				"windAffectednes": 0.2
+			},
+			{
+				// Smoke
+				"hsvaColor": [ { "avg": 0, "var": 0 }, { "avg": 0, "var": 0 }, { "avg": 70, "var": 30 }, { "avg": 220, "var": 50 } ],
+				"opacityEvolve": { "transform": "linear", "factor": -255 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [ { "avg": 0.0, "var": 0.4 }, { "avg": -0.4, "var": 0 }, { "avg": 0.0, "var": 0.4 } ],
+				"velocity": [ { "avg": 0.0, "var": 0.025 }, { "avg": 0.2, "var": 0.05 }, { "avg": 0.0, "var": 0.025 } ],
+				"quantity": { "avg": 0.08 },
+				"size": { "avg": 0.6, "var": 0.1 },
+				"sizeEvolve": { "transform": "linear", "factor": 1.5 },
+				"particleModel": "Quad",
+				"lifeLength": { "avg": 18 },
+				"selfPropelled": true,
+				"windAffectednes": 0.7
+			},
+			{
+				// Flame
+				"hsvaColor": [ { "avg": 20, "var": 20 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 50 }, { "avg": 255, "var": 0 } ],
+				"opacityEvolve": { "transform": "quadratic", "factor": -16 },
+				"gravityEffect": { "avg": 0, "var": 0 },
+				"posOffset": [ { "avg": 0.0, "var": 0.2 }, { "avg": -0.3, "var": 0 }, { "avg": 0.0, "var": 0.2 } ],
+				"velocity": [ { "avg": 0.0, "var": 0.1 }, { "avg": 0.125, "var": 0.05 }, { "avg": 0.0, "var": 0.1 } ],
+				"quantity": { "avg": 1 },
+				"size": { "avg": 0.7, "var": 0.1 },
+				"lifeLength": { "avg": 0.25 },
+				"sizeEvolve": { "transform": "linear", "factor": 0.25 },
+				"particleModel": "Quad",
+				"vertexFlags": 128,
+				"windAffectednes": 0.5
+			}
+		]
+	},
+	// Otherwise the block traps its own light inside its cell. The vanilla lantern and firepit set this too.
+	lightAbsorption: 0,
+	blockmaterial: "Metal",
+	resistance: 3,
+	// Neither tier fills its cell. Claiming {all:true} would cull neighbouring faces that should be drawn.
+	sidesolid: { all: false },
+	sideopaque: { all: false },
+	replaceable: 0,
+	guiTransformByType: {
+		"beacon-fire-*": {
+			translation: { x: 0, y: 6.06, z: 0 },
+			rotation: { x: -22, y: -45.3, z: 0 },
+			scale: 0.8
+		},
+		"beacon-oillamp-*": {
+			translation: { x: 0, y: 3.85, z: 0 },
+			rotation: { x: 158, y: 45, z: -180 },
+			scale: 0.92
+		}
+	},
+	tpHandTransformByType: {
+		"beacon-fire-*": {
+			translation: { x: -2.36, y: -1.82, z: -1.91 },
+			rotation: { x: -143, y: -146.39, z: 118.17 }
+		},
+		"beacon-oillamp-*": {
+			translation: { x: -2.14, y: -1.38, z: -1.92 },
+			rotation: { x: -73.86, y: -149.88, z: 62.5 },
+			scale: 0.35
+		}
+	},
+	groundTransform: { scale: 2 },
+	creativeinventory: { "general": ["beacon-fire-unlit", "beacon-oillamp-unlit"] }
+}

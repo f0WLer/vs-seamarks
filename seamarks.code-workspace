@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../GameAPI/1.22.3"
+		}
+	],
+	"settings": {
+		"powershell.cwd": "seamarks"
+	}
+}

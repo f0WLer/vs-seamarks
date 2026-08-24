@@ -1,0 +1,58 @@
+{
+	code: "lenspanel",
+	// ItemLensPanel reads BeamSignature.WidthForType off the "type" variant to fill in the {0} degree
+	// figure in itemdesc-lenspanel-N, since the engine's own itemdesc lookup has no argument substitution.
+	class: "ItemLensPanel",
+	// Four types, densest Fresnel (1) to a ring-less blank (4). The type sets the beam width once fitted,
+	// and picks which lenspanel shape shows on the housing mount. Glass color is a separate axis: it tints
+	// the panel and, on install, the beam it drives, independent of width. The states match the
+	// seamarks:abstract/glasstype codes exactly, since Glassmaking's finishing recipes substitute that
+	// same code into the output item's variant.
+	variantgroups: [
+		{ code: "type", states: ["1", "2", "3", "4"] },
+		{ code: "glasscolor", states: ["clearoptical", "redoptical", "greenoptical", "amberoptical"] }
+	],
+	shapeByType: {
+		"*-1-*": { base: "seamarks:item/glass/lenspanel_1" },
+		"*-2-*": { base: "seamarks:item/glass/lenspanel_2" },
+		"*-3-*": { base: "seamarks:item/glass/lenspanel_3" },
+		"*-4-*": { base: "seamarks:item/glass/lenspanel_4" }
+	},
+	// Reuses the game's own stained glass, so there are no new textures to paint. Amber borrows yellow,
+	// the closest the vanilla set has.
+	texturesByType: {
+		"*-clearoptical": { "glass": { base: "game:block/glass/plain" } },
+		"*-redoptical": { "glass": { base: "game:block/glass/red" } },
+		"*-greenoptical": { "glass": { base: "game:block/glass/green" } },
+		"*-amberoptical": { "glass": { base: "game:block/glass/yellow" } }
+	},
+	// The moment the last lenspanel-* workbench recipe step finishes, BlockEntityWorkbench swaps the
+	// mounted workpiece for this item directly (recipe.Output.ResolvedItemStack), so it briefly sits in
+	// the bench before the player takes it. Same fallback as lensblank-annealed's own
+	// workbenchItemTransform, so it doesn't flip back to Glassmaking's own upright default for that
+	// moment.
+	attributes: {
+		workbenchItemTransform: {
+			translation: { x: -0.125, y: 0.5, z: 0 },
+			rotation: { x: 90, y: 0, z: 0 },
+			origin: { x: 0.5, y: 0.5, z: 0.5 },
+			scale: 0.8
+		}
+	},
+	guiTransform: {
+		translation: { x: 0, y: 2.9, z: 0 },
+		rotation: { x: 158, y: -22, z: -180 },
+		scale: 1.78
+	},
+	tpHandTransform: {
+		translation: { x: -1.02, y: -0.78, z: -0.54 },
+		rotation: { x: 109.17, y: -167.11, z: -84.5 },
+		scale: 0.7
+	},
+	groundTransform: {
+		origin: { x: 0.5, y: 0.5, z: 0.5299 },
+		scale: 3
+	},
+	maxstacksize: 16,
+	creativeinventory: { "general": ["*"] }
+}

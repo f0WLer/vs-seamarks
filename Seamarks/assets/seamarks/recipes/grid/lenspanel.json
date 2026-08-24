@@ -1,0 +1,186 @@
+[
+	{
+		// Grid-craftable stand-ins for the Glassmaking cast/anneal/finish chain, so a lens panel is still
+		// reachable without that mod. Removed in SeamarksModSystem.AssetsFinalize when Glassmaking is
+		// present, so its intended pipeline stays the only route once it's installed.
+		//
+		// This sits inside the first recipe and not up between the brackets on purpose. The loader reads a
+		// comment that's a direct child of the array as an array entry of its own, fails to make a recipe
+		// out of it, and logs one error per line. Vanilla's own recipe files keep their comments inside an
+		// object for the same reason.
+		ingredientPattern: "AB,_C",
+		ingredients: {
+			"A": { type: "block", code: "game:glassslab-plain-down-free" },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-1-clearoptical" }
+	},
+	{
+		ingredientPattern: "AB,C_",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-plain-down-free" },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-2-clearoptical" }
+	},
+	{
+		ingredientPattern: "A_,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "block", code: "game:glassslab-plain-down-free" }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-3-clearoptical" }
+	},
+	{
+		ingredientPattern: "_A,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-plain-down-free" },
+			"C": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-4-clearoptical" }
+	},
+	{
+		ingredientPattern: "AB,_C",
+		ingredients: {
+			"A": { type: "block", code: "game:glassslab-red-down-free" },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-1-redoptical" }
+	},
+	{
+		ingredientPattern: "AB,C_",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-red-down-free" },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-2-redoptical" }
+	},
+	{
+		ingredientPattern: "A_,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "block", code: "game:glassslab-red-down-free" }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-3-redoptical" }
+	},
+	{
+		ingredientPattern: "_A,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-red-down-free" },
+			"C": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-4-redoptical" }
+	},
+	{
+		ingredientPattern: "AB,_C",
+		ingredients: {
+			"A": { type: "block", code: "game:glassslab-green-down-free" },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-1-greenoptical" }
+	},
+	{
+		ingredientPattern: "AB,C_",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-green-down-free" },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-2-greenoptical" }
+	},
+	{
+		ingredientPattern: "A_,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "block", code: "game:glassslab-green-down-free" }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-3-greenoptical" }
+	},
+	{
+		ingredientPattern: "_A,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-green-down-free" },
+			"C": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-4-greenoptical" }
+	},
+	{
+		ingredientPattern: "AB,_C",
+		ingredients: {
+			"A": { type: "block", code: "game:glassslab-yellow-down-free" },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-1-amberoptical" }
+	},
+	{
+		ingredientPattern: "AB,C_",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-yellow-down-free" },
+			"C": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-2-amberoptical" }
+	},
+	{
+		ingredientPattern: "A_,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 },
+			"C": { type: "block", code: "game:glassslab-yellow-down-free" }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-3-amberoptical" }
+	},
+	{
+		ingredientPattern: "_A,BC",
+		ingredients: {
+			"A": { type: "item", tags: ["tool-hammer"], isTool: true, toolDurabilityCost: 5 },
+			"B": { type: "block", code: "game:glassslab-yellow-down-free" },
+			"C": { type: "item", tags: ["tool-chisel"], isTool: true, toolDurabilityCost: 5 }
+		},
+		width: 2,
+		height: 2,
+		output: { type: "item", code: "seamarks:lenspanel-4-amberoptical" }
+	}
+]

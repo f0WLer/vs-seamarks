@@ -10,7 +10,7 @@
 	// same code into the output item's variant.
 	variantgroups: [
 		{ code: "type", states: ["1", "2", "3", "4"] },
-		{ code: "glasscolor", states: ["clearoptical", "redoptical", "greenoptical", "amberoptical"] }
+		{ code: "glasscolor", states: ["clearoptical", "redoptical", "greenoptical", "amberoptical", "temporaloptical"] }
 	],
 	shapeByType: {
 		"*-1-*": { base: "seamarks:item/glass/lenspanel_1" },
@@ -24,7 +24,8 @@
 		"*-clearoptical": { "glass": { base: "game:block/glass/plain" } },
 		"*-redoptical": { "glass": { base: "game:block/glass/red" } },
 		"*-greenoptical": { "glass": { base: "game:block/glass/green" } },
-		"*-amberoptical": { "glass": { base: "game:block/glass/yellow" } }
+		"*-amberoptical": { "glass": { base: "game:block/glass/yellow" } },
+		"*-temporaloptical": { "glass": { base: "seamarks:block/glass/temporal" } }
 	},
 	// The moment the last lenspanel-* workbench recipe step finishes, BlockEntityWorkbench swaps the
 	// mounted workpiece for this item directly (recipe.Output.ResolvedItemStack), so it briefly sits in

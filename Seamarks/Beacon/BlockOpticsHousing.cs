@@ -92,17 +92,19 @@ public sealed class BlockOpticsHousing : Block
 
     // Mirrors lenspanel.json's own texturesByType: the housing mesh grafts a lens panel shape onto itself
     // and has to redo that color swap in code, since the grafted faces resolve off the housing block's
-    // texture map, not the panel item's.
-    private static readonly Dictionary<string, string> GlassTextureByColor = new()
+    // texture map, not the panel item's. Full AssetLocations, not bare paths under an assumed "game"
+    // domain: Temporal's texture is this mod's own, the other four borrow vanilla stained glass.
+    private static readonly Dictionary<string, AssetLocation> GlassTextureByColor = new()
     {
-        ["clearoptical"] = "block/glass/plain",
-        ["redoptical"] = "block/glass/red",
-        ["greenoptical"] = "block/glass/green",
-        ["amberoptical"] = "block/glass/yellow",
+        ["clearoptical"] = new("game", "block/glass/plain"),
+        ["redoptical"] = new("game", "block/glass/red"),
+        ["greenoptical"] = new("game", "block/glass/green"),
+        ["amberoptical"] = new("game", "block/glass/yellow"),
+        ["temporaloptical"] = new(SeamarksModSystem.Domain, "block/glass/temporal"),
     };
 
-    public static AssetLocation LensGlassTexture(string glasscolor) => new("game",
-        GlassTextureByColor.GetValueOrDefault(glasscolor, GlassTextureByColor[BeamSignature.DefaultGlassColor]));
+    public static AssetLocation LensGlassTexture(string glasscolor) =>
+        GlassTextureByColor.GetValueOrDefault(glasscolor, GlassTextureByColor[BeamSignature.DefaultGlassColor]);
 
     public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1f)
     {

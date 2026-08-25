@@ -54,13 +54,16 @@ public static class BeamColor
         return false;
     }
 
-    // Warm, saturated-but-not-neon set that reads well against night sky and water; hex covers anything
-    // not named here.
+    // Mostly a warm, saturated-but-not-neon set that reads well against night sky and water; hex covers
+    // anything not named here. "temporal" is the one exception: it's pinned to 0x20DCA8, the Temporal
+    // Gear's own color, not picked by feel. The Temporal lens panel resolves to this same name
+    // (LensColorPacked strips its "optical" suffix), so the two have to agree exactly.
     private static readonly Dictionary<string, int> Named = new()
     {
         ["white"] = 0xFFFFFF, ["warm"] = 0xFFE5A6, ["amber"] = 0xFFBF40, ["yellow"] = 0xFFE040,
         ["orange"] = 0xFF8020, ["red"] = 0xFF3030, ["pink"] = 0xFF80C0, ["magenta"] = 0xFF40FF,
         ["purple"] = 0xA040FF, ["blue"] = 0x4060FF, ["cyan"] = 0x40FFFF, ["green"] = 0x30FF40,
+        ["temporal"] = 0x20DCA8,
     };
 
     // For command feedback: the hex of an override, or a plain label for the tier default.

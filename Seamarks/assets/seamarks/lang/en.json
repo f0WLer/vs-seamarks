@@ -47,6 +47,11 @@
 	"item-lenspanel-3-amberoptical":			"Amber Lens Panel III",
 	"item-lenspanel-4-amberoptical":			"Amber Lens Panel IV",
 
+	"item-lenspanel-1-temporaloptical":			"Temporal Lens Panel I",
+	"item-lenspanel-2-temporaloptical":			"Temporal Lens Panel II",
+	"item-lenspanel-3-temporaloptical":			"Temporal Lens Panel III",
+	"item-lenspanel-4-temporaloptical":			"Temporal Lens Panel IV",
+
 	"itemdesc-opticalcullet-*":					"Optical glass blend, ready to melt down for casting an optical beacon lens.",
 	"item-opticalcullet-clearoptical":			"Optical Glass Blend",
 	"item-opticalcullet-redoptical":			"Red Optical Glass Blend",
@@ -132,7 +137,7 @@
 	"seamarks:notify-needs-torch":				"This beacon needs a torch or firestarter to light it.",
 	"seamarks:hint-ignite-oillamp":				"<icon>rightmousebutton</icon> with an empty hand to light it.",
 	"seamarks:blockhelp-light-fire":			"Light with torch",
-	"seamarks:blockhelp-fire-extinguish":		"Put out the fire",
+	"seamarks:blockhelp-fire-extinguish":		"Put out fire",
 	"seamarks:hint-ignite-fire":				"Use a torch or firestarter to light it.",
 	"seamarks:blockhelp-beacon-ignite":			"Light lamp",
 	"seamarks:blockhelp-beacon-extinguish":		"Put out lamp",

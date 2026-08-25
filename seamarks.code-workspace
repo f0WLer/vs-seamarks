@@ -8,6 +8,9 @@
 		}
 	],
 	"settings": {
-		"powershell.cwd": "seamarks"
+		"powershell.cwd": "seamarks",
+		"files.associations": {
+			"**/assets/**/*.json": "json5"
+		}
 	}
 }

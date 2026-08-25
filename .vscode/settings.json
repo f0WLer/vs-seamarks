@@ -1,0 +1,11 @@
+{
+	// Vintage Story's asset JSON (itemtypes, blocktypes, recipes, lang, worldproperties) allows
+	// // comments and unquoted keys, which plain JSON and even JSONC reject, and there's no setting
+	// that waives that in VS Code's own JSON language service. The JSON5 extension (mrmlnc.vscode-
+	// json5) is syntax highlighting only, no validator, so treating these as JSON5 just stops the
+	// false errors outright. Actual well-formedness is still checked at build time via CakeBuild's
+	// ValidateJson task.
+	"files.associations": {
+		"**/assets/**/*.json": "json5"
+	}
+}

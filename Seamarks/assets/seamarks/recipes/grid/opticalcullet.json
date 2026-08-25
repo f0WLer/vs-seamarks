@@ -45,5 +45,17 @@
 		width: 3,
 		height: 2,
 		output: { type: "item", code: "seamarks:opticalcullet-amberoptical" }
+	},
+	{
+		ingredientPattern: "ABC,D__",
+		ingredients: {
+			"A": { type: "item", code: "game:crushed-quartz", quantity: 4 },
+			"B": { type: "item", code: "game:lime" },
+			"C": { type: "item", code: "game:potash" },
+			"D": { type: "item", code: "game:gear-temporal" }
+		},
+		width: 3,
+		height: 2,
+		output: { type: "item", code: "seamarks:opticalcullet-temporaloptical" }
 	}
 ]

@@ -57,6 +57,7 @@
 	"item-opticalcullet-redoptical":			"Red Optical Glass Blend",
 	"item-opticalcullet-greenoptical":			"Green Optical Glass Blend",
 	"item-opticalcullet-amberoptical":			"Amber Optical Glass Blend",
+	"item-opticalcullet-temporaloptical":		"Temporal Optical Glass Blend",
 
 
 	"itemdesc-lensblank-raw-*":					"Cast in a lens panel mold, still hot with strain from cooling too fast. Needs annealing.",
@@ -64,18 +65,21 @@
 	"item-lensblank-raw-redoptical":			"Raw Fresnel Lens Blank (Red)",
 	"item-lensblank-raw-greenoptical":			"Raw Fresnel Lens Blank (Green)",
 	"item-lensblank-raw-amberoptical":			"Raw Fresnel Lens Blank (Amber)",
+	"item-lensblank-raw-temporaloptical":		"Raw Fresnel Lens Blank (Temporal)",
 
-	"seamarks:handbook-lensblank-meltedfrom-title":		"Melted from",
-	"seamarks:handbooktext-lensblank-raw-clearoptical":	"400 units of clear optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-clearoptical\">optical glass blend</a> in the glass smeltery.",
-	"seamarks:handbooktext-lensblank-raw-redoptical":	"400 units of red optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-redoptical\">red optical glass blend</a> in the glass smeltery.",
-	"seamarks:handbooktext-lensblank-raw-greenoptical":	"400 units of green optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-greenoptical\">green optical glass blend</a> in the glass smeltery.",
-	"seamarks:handbooktext-lensblank-raw-amberoptical":	"400 units of amber optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-amberoptical\">amber optical glass blend</a> in the glass smeltery.",
-	
+	"seamarks:handbook-lensblank-meltedfrom-title":			"Melted from",
+	"seamarks:handbooktext-lensblank-raw-clearoptical":		"400 units of clear optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-clearoptical\">optical glass blend</a> in the glass smeltery.",
+	"seamarks:handbooktext-lensblank-raw-redoptical":		"400 units of red optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-redoptical\">red optical glass blend</a> in the glass smeltery.",
+	"seamarks:handbooktext-lensblank-raw-greenoptical":		"400 units of green optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-greenoptical\">green optical glass blend</a> in the glass smeltery.",
+	"seamarks:handbooktext-lensblank-raw-amberoptical":		"400 units of amber optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-amberoptical\">amber optical glass blend</a> in the glass smeltery.",
+	"seamarks:handbooktext-lensblank-raw-temporaloptical":	"400 units of temporal optical glass at 1350°C, melted from <a href=\"handbook://seamarks:opticalcullet-temporaloptical\">temporal optical glass blend</a> in the glass smeltery.",
+
 	"itemdesc-lensblank-annealed-*":			"Cooled slowly and free of strain. Ready to shape into a lens panel on the glassworking bench.",
 	"item-lensblank-annealed-clearoptical":		"Annealed Fresnel Lens Blank (Clear)",
 	"item-lensblank-annealed-redoptical":		"Annealed Fresnel Lens Blank (Red)",
 	"item-lensblank-annealed-greenoptical":		"Annealed Fresnel Lens Blank (Green)",
 	"item-lensblank-annealed-amberoptical":		"Annealed Fresnel Lens Blank (Amber)",
+	"item-lensblank-annealed-temporaloptical":	"Annealed Fresnel Lens Blank (Temporal)",
 
 	"blockdesc-lenspanelmold-*-raw":			"A bakeable mold to cast raw Fresnel lens panel blanks from molten optical glass",
 	"block-lenspanelmold-red-raw":				"Raw red clay lens panel mold",

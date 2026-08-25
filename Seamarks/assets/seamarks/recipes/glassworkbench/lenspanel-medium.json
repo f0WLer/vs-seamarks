@@ -237,5 +237,64 @@
 				useTime: 5
 			}
 		]
+	},
+	{
+		code: "seamarks:lenspanel-medium-temporaloptical",
+		input: { type: "item", code: "seamarks:lensblank-annealed-temporaloptical" },
+		output: { type: "item", code: "seamarks:lenspanel-2-temporaloptical" },
+		steps: [
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"blowtorch": {
+						type: "item",
+						code: "glassmaking:blowtorch",
+						recipeAttributes: { temperature: 800 }
+					}
+				},
+				useTime: 5
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-chisel"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:chisel-copper" }
+					}
+				},
+				useTime: 1
+			},
+			{
+				workpieceTransform: {
+					translation: { x: -0.125, y: 0.5, z: 0 },
+					rotation: { x: 90, y: 0, z: 0 },
+					origin: { x: 0.5, y: 0.5, z: 0.5 },
+					scale: 0.8
+				},
+				tools: {
+					"handItem": {
+						type: "item",
+						tags: ["tool-hammer"],
+						isTool: true,
+						toolDurabilityCost: 5,
+						recipeAttributes: { "seamarks:tooltipitem": "game:hammer-copper" }
+					}
+				},
+				useTime: 5
+			}
+		]
 	}
 ]

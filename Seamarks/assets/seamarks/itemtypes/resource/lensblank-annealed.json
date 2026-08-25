@@ -27,7 +27,8 @@
 		"*-clearoptical": { "glass": { base: "game:block/glass/plain" } },
 		"*-redoptical": { "glass": { base: "game:block/glass/red" } },
 		"*-greenoptical": { "glass": { base: "game:block/glass/green" } },
-		"*-amberoptical": { "glass": { base: "game:block/glass/yellow" } }
+		"*-amberoptical": { "glass": { base: "game:block/glass/yellow" } },
+		"*-temporaloptical": { "glass": { base: "seamarks:block/glass/temporal" } }
 	},
 	maxstacksize: 16,
 	materialDensity: 2500,

@@ -234,10 +234,13 @@ public static class BeamState
     // Mesh-beam level of detail. The far-distance blip renders continuously at every range, so the
     // mesh beam only has to dissolve smoothly into it at the far edge instead of cutting out. Full within
     // the near band, fading to 0 across the tunable LOD range, and not drawn past that, where the blip
-    // carries it alone and a 3D cone would be sub-pixel anyway.
-    public static float MeshLodFactor(double dist)
+    // carries it alone and a 3D cone would be sub-pixel anyway. The band slides out to the player's view
+    // distance when that's larger, keeping its tuned width, so a beacon you can see the tower of still
+    // has its beam.
+    public static float MeshLodFactor(double dist, float viewDistanceBlocks)
     {
-        float start = BeamTuning.LodStartBlocks, end = BeamTuning.LodEndBlocks;
+        float start = MathF.Max(BeamTuning.LodStartBlocks, viewDistanceBlocks);
+        float end = start + MathF.Max(0f, BeamTuning.LodEndBlocks - BeamTuning.LodStartBlocks);
         if (dist <= start) return 1f;
         if (dist >= end) return 0f;
         // Reaching here means start < dist < end, so end > start and the divide is safe even if a tuner

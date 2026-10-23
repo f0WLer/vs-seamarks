@@ -127,6 +127,9 @@ public sealed class BeamRenderer : IRenderer
 
         var camPos = player.CameraPos;
         double nowHours = BeamState.SweepNowHours(capi.World);
+        // Not WorldData.LastApprovedViewDistance: the client only writes that when the server overrides the
+        // request, so it sits at 0 in singleplayer. The engine writes any server cap back into this setting.
+        float viewDistance = capi.Settings.Int.Get("viewDistance", 256);
 
         rapi.GLEnableDepthTest();
         rapi.GLDepthMask(false); // additive translucent: test against terrain, never write depth
@@ -174,7 +177,7 @@ public sealed class BeamRenderer : IRenderer
             double dz = lampZ - camPos.Z;
             // Fold the ignition fade straight into the LOD factor. Both are only alpha multipliers on the
             // shells, so a beam fading in or out scales exactly like one fading with distance.
-            float lod = BeamState.MeshLodFactor(Math.Sqrt(dx * dx + dy * dy + dz * dz)) * rb.Fade;
+            float lod = BeamState.MeshLodFactor(Math.Sqrt(dx * dx + dy * dy + dz * dz), viewDistance) * rb.Fade;
             if (lod <= 0f) continue; // faded out into the distant blip, or fully un-ignited/extinguished
 
             // Player-set signature: BeamCount evenly-spaced beams, each with its own color and its own

@@ -51,7 +51,9 @@ public static class BeamTuning
     public static float UnfocusedLensOffsetBlocks;
     // Environment response (fed to the beam shader as uniforms).
     public static float FogScale, DayFadeLow, DayFadeHigh;
-    // LOD hand-off: the mesh beam fades out into the far blip across [LodStartBlocks, LodEndBlocks].
+    // LOD hand-off: the mesh beam fades out into the far blip across [LodStartBlocks, LodEndBlocks]. A view
+    // distance past LodStartBlocks pushes the band out, so LodStartBlocks is the minimum and the gap
+    // between the two is the fade width.
     public static float LodStartBlocks, LodEndBlocks;
     // Sweeping point light. Two lights per beacon throw the lamp's spill along the beam and sweep with the
     // heading, one straight out at lamp height and one pitched PointLightDownPitch degrees toward the

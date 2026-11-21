@@ -222,7 +222,8 @@ public class BlockBeacon : Block
         if (reflector == null) return false;
         if (world.Side != EnumAppSide.Server) return true;
 
-        if (reflector.TryAddPlate(metal, out var result))
+        var result = reflector.TryAddPlate(metal);
+        if (result == PlateAddResult.Added)
         {
             slot.TakeOut(1);
             slot.MarkDirty();
@@ -307,27 +308,22 @@ public class BlockBeacon : Block
         return code != null && code.Domain == SeamarksModSystem.Domain && code.Path == "opticshousing";
     }
 
+    // Ordered to match PlateMetal's own enum values, so an index into this array is a cast to the enum
+    // and back.
+    private static readonly string[] PlateMetalCodes = ["gold", "silver", "electrum"];
+
     private static bool TryGetPlateMetal(ItemStack stack, out PlateMetal metal)
     {
         metal = default;
         if (stack.Collectible is not ItemMetalPlate) return false;
 
-        switch (stack.Collectible.Variant["metal"])
-        {
-            case "gold": metal = PlateMetal.Gold; return true;
-            case "silver": metal = PlateMetal.Silver; return true;
-            case "electrum": metal = PlateMetal.Electrum; return true;
-            default: return false;
-        }
+        int index = Array.IndexOf(PlateMetalCodes, stack.Collectible.Variant["metal"]);
+        if (index < 0) return false;
+        metal = (PlateMetal)index;
+        return true;
     }
 
-    private static string PlateMetalCode(PlateMetal metal) => metal switch
-    {
-        PlateMetal.Gold => "gold",
-        PlateMetal.Silver => "silver",
-        PlateMetal.Electrum => "electrum",
-        _ => "gold",
-    };
+    private static string PlateMetalCode(PlateMetal metal) => PlateMetalCodes[(int)metal];
 
     private static string PlateMetalName(PlateMetal metal) => Lang.Get("material-" + PlateMetalCode(metal));
 

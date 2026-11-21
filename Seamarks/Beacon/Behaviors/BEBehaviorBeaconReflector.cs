@@ -31,17 +31,16 @@ public class BEBehaviorBeaconReflector : BEBehaviorBeacon, IBeaconInfoContributo
         info.HasHousing = housing != null;
     }
 
-    public bool TryAddPlate(PlateMetal metal, out PlateAddResult result)
+    public PlateAddResult TryAddPlate(PlateMetal metal)
     {
         int maxPlates = BeaconArchetypeData.Of(Beacon.Tier).MaxPlates;
-        if (plateCount >= maxPlates) { result = PlateAddResult.Full; return false; }
-        if (plateCount > 0 && plateMetal != metal) { result = PlateAddResult.MetalMismatch; return false; }
+        if (plateCount >= maxPlates) return PlateAddResult.Full;
+        if (plateCount > 0 && plateMetal != metal) return PlateAddResult.MetalMismatch;
 
         plateMetal = metal;
         plateCount++;
         Beacon.MarkStateChanged();
-        result = PlateAddResult.Added;
-        return true;
+        return PlateAddResult.Added;
     }
 
     public bool TryRemovePlate(out PlateMetal removedMetal)

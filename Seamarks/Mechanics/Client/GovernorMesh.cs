@@ -44,22 +44,17 @@ public static class GovernorMesh
     // sits; otherwise it turns about the upright line through that point.
     public sealed record GovernorPart(MeshData Mesh, Vec3f? SpinPivot);
 
-    public static GovernorPart[]? Get(ICoreClientAPI capi, int step)
-    {
-        step = GameMath.Clamp(step, 0, ExtensionSteps);
-        return ObjectCacheUtil.GetOrCreate(capi, "seamarks:governor-parts-" + step, () => Build(capi, step));
-    }
-
-    // The uploaded form, cached per step the same way the mesh data above is. Every Governor in the world
-    // draws from the same set of poses, and the eased extension walks the whole range in about a second on
-    // a spin-up, so uploading per renderer per step meant a dispose-and-reupload cycle several times a
-    // second for each block. These belong to the cache, so a renderer reads them and never disposes them.
+    // The uploaded form is what actually needs to live for the client's whole session (every Governor in
+    // the world draws from the same set of poses, and the eased extension walks the whole range in about a
+    // second on a spin-up, so uploading per renderer per step would mean a dispose-and-reupload cycle
+    // several times a second for each block). The CPU-side MeshData built along the way is only a stepping
+    // stone to that upload, so it isn't cached itself, or it would pin 25 steps of it alive for nothing.
     public static (MultiTextureMeshRef Mesh, Vec3f? SpinPivot)[]? GetUploaded(ICoreClientAPI capi, int step)
     {
         step = GameMath.Clamp(step, 0, ExtensionSteps);
         return ObjectCacheUtil.GetOrCreate(capi, "seamarks:governor-meshrefs-" + step, () =>
         {
-            GovernorPart[]? built = Get(capi, step);
+            GovernorPart[]? built = Build(capi, step);
             // Per texture, not one buffer: the block atlas spans several pages once enough mods are
             // loaded, and binding a single one draws every face that landed elsewhere with the wrong
             // texture, or drops it.

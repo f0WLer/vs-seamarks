@@ -29,7 +29,6 @@ public class BEBehaviorGovernor : BEBehaviorMPBase
     private const double AccelerationFactor = 0.5;
 
     private double capableSpeed;
-    private long clampListenerId;
 
     // A placed block entity's own position never moves, so this is computed once instead of on every
     // InputNode read (InputSpeed/InputAngleRad are read every render frame, and TargetSpeed every
@@ -49,20 +48,9 @@ public class BEBehaviorGovernor : BEBehaviorMPBase
         // Torque can only push the output up. Its fall is left to the network's own drag, which coasts on
         // purpose so windmills freewheel, and that coast is far too slow for a governor and lets the output
         // outrun a stopped input. A per-tick ceiling holds the output at or below the target both ways. The
-        // interval matches the mechanical-power tick, so the two stay in step.
-        if (api.Side == EnumAppSide.Server) clampListenerId = Blockentity.RegisterGameTickListener(ClampOutput, 20);
-    }
-
-    public override void OnBlockRemoved()
-    {
-        base.OnBlockRemoved();
-        if (clampListenerId != 0) Blockentity.UnregisterGameTickListener(clampListenerId);
-    }
-
-    public override void OnBlockUnloaded()
-    {
-        base.OnBlockUnloaded();
-        if (clampListenerId != 0) Blockentity.UnregisterGameTickListener(clampListenerId);
+        // interval matches the mechanical-power tick, so the two stay in step. Registered through the block
+        // entity, which drops it on removal and unload.
+        if (api.Side == EnumAppSide.Server) Blockentity.RegisterGameTickListener(ClampOutput, 20);
     }
 
     // The output may sit below the target under a heavy load, but it must never run past it. The engine

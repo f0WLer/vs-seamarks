@@ -91,16 +91,27 @@ public sealed class BeaconInfo
         return DefaultBeamWidthDeg;
     }
 
+    // The one place the burn rules live, shared by this snapshot and by BlockEntityBeacon (which keeps the
+    // same fields under its own names), so the server's visibility check and the block itself can't
+    // disagree about whether a beacon is lit. A beacon that needs no fuel lights empty and never burns
+    // down, so it rests on the ignition anchor alone. An operator's everburning flag does the same for
+    // a tier that normally needs fuel.
+    public static bool NeedsFuel(BeaconTier tier, bool everburning) =>
+        !everburning && BeaconArchetypeData.Of(tier).RequiresFuel;
+
+    public static bool IsLit(BeaconTier tier, bool everburning, double ignitedAtTotalHours, float fuelPoolHours, double nowTotalHours) =>
+        ignitedAtTotalHours >= 0
+        && (!NeedsFuel(tier, everburning) || nowTotalHours - ignitedAtTotalHours < fuelPoolHours);
+
     public bool IsBurning(double nowTotalHours) =>
-        IgnitedAtTotalHours >= 0 && (Everburning || !BeaconArchetypeData.Of(Tier).RequiresFuel
-            || nowTotalHours - IgnitedAtTotalHours < FuelHoursAtIgnition);
+        IsLit(Tier, Everburning, IgnitedAtTotalHours, FuelHoursAtIgnition, nowTotalHours);
 
     // 0..1 share of the fuel pool still left, for anything that wants to render a beacon as running low.
     // An everburning or fuel-free beacon always reads full, since it never actually runs down.
     public float RemainingFuelFraction(double nowTotalHours)
     {
         ref readonly BeaconArchetypeData archetype = ref BeaconArchetypeData.Of(Tier);
-        if (Everburning || !archetype.RequiresFuel || archetype.MaxFuelHours <= 0f) return 1f;
+        if (!NeedsFuel(Tier, Everburning) || archetype.MaxFuelHours <= 0f) return 1f;
         if (IgnitedAtTotalHours < 0) return 0f;
 
         float remaining = MathF.Max(0f, FuelHoursAtIgnition - (float)(nowTotalHours - IgnitedAtTotalHours));

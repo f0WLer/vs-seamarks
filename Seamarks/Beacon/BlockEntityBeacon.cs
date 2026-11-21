@@ -254,18 +254,14 @@ public class BlockEntityBeacon : BlockEntity
 
     private double NowHours => Api.World.Calendar.TotalHours;
 
-    // Whether this tier needs fuel at all. Off means it lights empty and never burns down, so IsBurning
-    // drops the time-versus-pool check and rests on the anchor alone.
-    public bool RequiresFuel => BeaconArchetypeData.Of(tier).RequiresFuel;
-
     // Whether an operator has pinned this beacon to burn forever.
     public bool IsEverburning => everburning;
 
     // The effective fuel requirement, folding in the per-beacon override: an everburning beacon needs none
     // even on a tier that normally does.
-    private bool NeedsFuel => RequiresFuel && !everburning;
+    public bool NeedsFuel => BeaconInfo.NeedsFuel(tier, everburning);
 
-    public bool IsBurning => litAtTotalHours >= 0 && (!NeedsFuel || NowHours - litAtTotalHours < fuelPoolHours);
+    public bool IsBurning => BeaconInfo.IsLit(tier, everburning, litAtTotalHours, fuelPoolHours, NowHours);
 
     // Correct in every state without waiting on the expiry tick to settle. While lit it counts down from
     // the pool, while frozen unlit (put out by hand or never lit at all) it's the stored pool, and a

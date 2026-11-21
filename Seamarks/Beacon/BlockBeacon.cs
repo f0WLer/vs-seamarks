@@ -204,9 +204,7 @@ public class BlockBeacon : Block
 
         if (reflector.TryDetachHousing(out BeamSignature? detached))
         {
-            var stack = new ItemStack(world.GetBlock(new AssetLocation(SeamarksModSystem.Domain, "opticshousing")));
-            detached!.ToStack(stack); // hand the tuning back out, or refitting it would come up plain
-            GiveOrDrop(world, byPlayer, stack, beacon.Pos);
+            GiveOrDrop(world, byPlayer, BlockOpticsHousing.StackFor(world, detached!), beacon.Pos);
             Notify(byPlayer, Lang.Get("seamarks:notify-housing-detached"));
         }
         else
@@ -248,8 +246,7 @@ public class BlockBeacon : Block
 
         if (reflector.TryRemovePlate(out var removedMetal))
         {
-            var plateItem = world.GetItem(new AssetLocation("game", $"metalplate-{PlateMetalCode(removedMetal)}"));
-            GiveOrDrop(world, byPlayer, new ItemStack(plateItem), beacon.Pos);
+            GiveOrDrop(world, byPlayer, PlateStack(world, removedMetal), beacon.Pos);
             Notify(byPlayer, Lang.Get("seamarks:notify-plate-removed", PlateMetalName(removedMetal), reflector.PlateCount));
         }
         else
@@ -295,7 +292,7 @@ public class BlockBeacon : Block
     // no countdown to quote.
     private static string LitMessage(BlockEntityBeacon beacon)
     {
-        return beacon.RequiresFuel
+        return beacon.NeedsFuel
             ? Lang.Get("seamarks:notify-lit", beacon.RemainingFuelHours)
             : Lang.Get("seamarks:notify-lit-nofuel");
     }
@@ -325,6 +322,9 @@ public class BlockBeacon : Block
 
     private static string PlateMetalCode(PlateMetal metal) => PlateMetalCodes[(int)metal];
 
+    private static ItemStack PlateStack(IWorldAccessor world, PlateMetal metal, int count = 1) =>
+        new(world.GetItem(new AssetLocation("game", $"metalplate-{PlateMetalCode(metal)}")), count);
+
     private static string PlateMetalName(PlateMetal metal) => Lang.Get("material-" + PlateMetalCode(metal));
 
     public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer? byPlayer, float dropQuantityMultiplier = 1f)
@@ -335,17 +335,8 @@ public class BlockBeacon : Block
             && beacon.GetBehavior<BEBehaviorBeaconReflector>() is { } reflector)
         {
             // Breaking the beacon has to return the housing's tuning too, the same way detaching it does.
-            if (reflector.Housing is { } housing)
-            {
-                var stack = new ItemStack(world.GetBlock(new AssetLocation(SeamarksModSystem.Domain, "opticshousing")));
-                housing.ToStack(stack);
-                drops.Add(stack);
-            }
-            if (reflector.PlateCount > 0)
-            {
-                var plateItem = world.GetItem(new AssetLocation("game", $"metalplate-{PlateMetalCode(reflector.PlateMetal)}"));
-                drops.Add(new ItemStack(plateItem, reflector.PlateCount));
-            }
+            if (reflector.Housing is { } housing) drops.Add(BlockOpticsHousing.StackFor(world, housing));
+            if (reflector.PlateCount > 0) drops.Add(PlateStack(world, reflector.PlateMetal, reflector.PlateCount));
         }
 
         return [.. drops];

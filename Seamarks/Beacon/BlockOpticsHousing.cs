@@ -64,8 +64,7 @@ public sealed class BlockOpticsHousing : Block
         if (world.Side != EnumAppSide.Server) return true;
         if (!world.Claims.TryAccess(byPlayer, pos, EnumBlockAccessFlags.BuildOrBreak)) return true;
 
-        var stack = new ItemStack(this);
-        be.Signature.ToStack(stack);
+        var stack = StackFor(world, be.Signature);
         world.BlockAccessor.SetBlock(0, pos);
         if (!byPlayer.InventoryManager.TryGiveItemstack(stack, slotNotifyEffect: true))
         {
@@ -117,11 +116,18 @@ public sealed class BlockOpticsHousing : Block
         return StackWithSignature(world, pos);
     }
 
-    private ItemStack StackWithSignature(IWorldAccessor world, BlockPos pos)
+    private ItemStack StackWithSignature(IWorldAccessor world, BlockPos pos) =>
+        world.BlockAccessor.GetBlockEntity(pos) is BlockEntityOpticsHousing be
+            ? StackFor(world, be.Signature)
+            : new ItemStack(this);
+
+    // The one way to turn a signature into a housing stack, for every path that hands one out: breaking
+    // a placed housing or a lamp carrying one, picking it up, and detaching it. Each has to carry the
+    // tuning, or refitting the housing would come up plain.
+    public static ItemStack StackFor(IWorldAccessor world, BeamSignature signature)
     {
-        var stack = new ItemStack(this);
-        var be = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityOpticsHousing;
-        be?.Signature.ToStack(stack);
+        var stack = new ItemStack(world.GetBlock(new AssetLocation(SeamarksModSystem.Domain, "opticshousing")));
+        signature.ToStack(stack);
         return stack;
     }
 

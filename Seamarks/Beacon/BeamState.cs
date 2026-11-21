@@ -44,8 +44,8 @@ public static class BeamState
     }
 
     // How long the smoothed world clock takes to close most of a gap against the calendar it follows. Long
-    // enough that a resync step is spread into a rate change too small to see, short enough that the
-    // steady lag it leaves is a fixed handful of degrees, which nobody can pick out on a turning beam.
+    // enough that a resync step is spread into a rate change too small to see, short enough that it
+    // doesn't stray far from the calendar while that happens.
     private const double WorldClockLagSeconds = 4.0;
 
     // Past this much disagreement the filter gives up and jumps, because that is a real move of the world
@@ -82,9 +82,13 @@ public static class BeamState
     // server's value outright, with no easing, jumping the accumulated shortfall forward in one frame. On
     // an optic that turns once every nine seconds that step is several degrees.
     //
-    // Following the calendar through a lag filter spreads the step across a couple of seconds, leaving a
-    // rate change too small to notice. The average rate is untouched, so the beam still keeps world time,
-    // and the constant lag this leaves is the same for every client watching, so they stay in agreement.
+    // So the smoothed clock runs on its own at the calendar's rate and is only eased toward the raw one,
+    // which spreads a resync step across a couple of seconds as a rate change too small to notice. Easing
+    // alone would trail a moving clock by a fixed few seconds, and the server stamps each sweep anchor on
+    // its own raw clock, so every re-anchor would land that far off and the beam would jump. Free-running
+    // leaves no such lag, only the small gap the client's slow copy opens before the next resync. During a
+    // singleplayer pause the calendar stops and this keeps going, drifting ahead by at most the lag
+    // constant before it settles back once the game resumes.
     private static double SmoothedWorldHours(IWorldAccessor world)
     {
         double raw = world.Calendar.TotalHours;
@@ -102,6 +106,7 @@ public static class BeamState
         }
         else if (dt > 0.0)
         {
+            smoothedWorldHours += dt * calendarSpeed / 3600.0;
             // Exponential, so the several reads this takes in one frame compose to what a single read of
             // their combined interval would have given.
             smoothedWorldHours += (raw - smoothedWorldHours) * (1.0 - Math.Exp(-dt / WorldClockLagSeconds));

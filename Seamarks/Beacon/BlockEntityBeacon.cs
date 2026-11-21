@@ -25,6 +25,7 @@ public class BlockEntityBeacon : BlockEntity
     // reverse-computing off the tier's flat default rate silently mismatched whatever oil actually filled
     // the tank. Kept in the same ratio to fuelPoolHours as it decays, so mixed fills blend proportionally.
     private float fuelPoolLitres;
+    private bool litresMissingFromSave;
 
     // Set by an operator to make this one beacon burn without end: it lights with no fuel and never runs
     // out, and the flag rides the block through save, extinguish and relight, so a central always-on
@@ -77,12 +78,14 @@ public class BlockEntityBeacon : BlockEntity
 
         // A save from before the litres pool existed has fuel hours but no matching litres. Back-fill an
         // approximation off the tier's flat default rate, tier being unknown any earlier than this, so the
-        // display doesn't drop to 0L until the next top-up.
-        if (fuelPoolLitres <= 0f && fuelPoolHours > 0f)
+        // display doesn't drop to 0L until the next top-up. Keyed on the save lacking the field, since a
+        // lamp fed only solid fuel also has hours and no litres, and shouldn't be given any.
+        if (litresMissingFromSave && fuelPoolLitres <= 0f && fuelPoolHours > 0f)
         {
             float rate = BeaconArchetypeData.Of(tier).FuelHoursPerLitre;
             if (rate > 0f) fuelPoolLitres = fuelPoolHours / rate;
         }
+        litresMissingFromSave = false;
 
         // The rotating optic is a client render concern and only exists on directional (OilLamp) tiers. A
         // fitted housing's mesh goes to the renderer through RefreshHousingMesh, here and again whenever
@@ -265,8 +268,9 @@ public class BlockEntityBeacon : BlockEntity
 
     // Correct in every state without waiting on the expiry tick to settle. While lit it counts down from
     // the pool, while frozen unlit (put out by hand or never lit at all) it's the stored pool, and a
-    // beacon whose anchor is still set but whose time has run out reads 0 instead of the stale pool.
-    public float RemainingFuelHours => litAtTotalHours < 0
+    // beacon whose anchor is still set but whose time has run out reads 0 instead of the stale pool. A
+    // beacon that needs no fuel burns nothing, so its pool stays put however long it has been lit.
+    public float RemainingFuelHours => litAtTotalHours < 0 || !NeedsFuel
         ? fuelPoolHours
         : MathF.Max(0f, fuelPoolHours - (float)(NowHours - litAtTotalHours));
 
@@ -340,6 +344,9 @@ public class BlockEntityBeacon : BlockEntity
         }
         else
         {
+            // The old anchor measured nothing while the flag was on, so restart the countdown from now.
+            // Left alone, the elapsed time would be charged against the pool all at once.
+            if (litAtTotalHours >= 0) litAtTotalHours = NowHours;
             SettleIfBurnedOut();
         }
 
@@ -471,6 +478,7 @@ public class BlockEntityBeacon : BlockEntity
         litAtTotalHours = tree.GetDouble("ignitedAtTotalHours", -1);
         fuelPoolHours = tree.GetFloat("fuelHoursAtIgnition", 0);
         fuelPoolLitres = tree.GetFloat("fuelLitresAtIgnition", 0);
+        litresMissingFromSave = !tree.HasAttribute("fuelLitresAtIgnition");
         everburning = tree.GetBool("everburning", false);
         footprintMigrated = tree.GetBool("footprintMigrated", false);
 

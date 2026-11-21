@@ -31,10 +31,6 @@ public class BlockEntityBeacon : BlockEntity
     // lighthouse stays on across all of them. Fuelling still works and is just moot while it's set.
     private bool everburning;
 
-    // Guards FireBeaconFootprintMigration so it runs at most once per beacon. Temporary: safe to remove
-    // alongside that class and this field once old-footprint saves are no longer a realistic concern.
-    private bool footprintMigrated;
-
     // Burnout is time-derived with no per-tick sim, so nothing would otherwise notice it happening. This
     // listener catches it while lit and settles the spent fuel and the lit variant.
     private long expiryCheckListenerId;
@@ -101,26 +97,8 @@ public class BlockEntityBeacon : BlockEntity
             // zeroed and the lit/unlit variant matches reality on load.
             if (SettleIfBurnedOut()) MarkDirty(true);
             SyncLitBlockVariant();
-
-            if (tier == BeaconTier.Fire && !footprintMigrated)
-            {
-                Server.FireBeaconFootprintMigration.RunOnce(api, Pos);
-                footprintMigrated = true;
-                MarkDirty(true);
-            }
         }
         SyncState();
-    }
-
-    // A beacon placed fresh was already built under the current multiblock footprint, so it has nothing
-    // for FireBeaconFootprintMigration to clean up. Marking it migrated up front, instead of leaving the
-    // flag false and letting the scan run and find nothing, keeps that scan from ever touching an
-    // unrelated multiblock structure's filler cell that happens to land on one of its hardcoded stale
-    // offsets.
-    public override void OnBlockPlaced(ItemStack? byItemStack = null)
-    {
-        base.OnBlockPlaced(byItemStack);
-        footprintMigrated = true;
     }
 
     public override void OnBlockRemoved()
@@ -490,7 +468,6 @@ public class BlockEntityBeacon : BlockEntity
         tree.SetFloat("fuelHoursAtIgnition", fuelPoolHours);
         tree.SetFloat("fuelLitresAtIgnition", fuelPoolLitres);
         tree.SetBool("everburning", everburning);
-        tree.SetBool("footprintMigrated", footprintMigrated);
     }
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
@@ -500,7 +477,6 @@ public class BlockEntityBeacon : BlockEntity
         fuelPoolHours = tree.GetFloat("fuelHoursAtIgnition", 0);
         fuelPoolLitres = tree.GetFloat("fuelLitresAtIgnition", 0);
         everburning = tree.GetBool("everburning", false);
-        footprintMigrated = tree.GetBool("footprintMigrated", false);
 
         // How the client finds out a beacon was lit or put out: MarkDirty pushes the fields down and they
         // land here, so re-notify to let the sound behavior resync its loop. Guarded because

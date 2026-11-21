@@ -154,7 +154,6 @@ public readonly struct BeaconArchetypeData
             Beam = new BeamProfile
             {
                 Directional = true,
-                Pattern = BeamPattern.Rotating,
                 RotationPeriodHours = 0.15f, // ~9 real seconds/revolution at the reference shaft speed
                 // With the lens fitted: the tight, bright, flattened searchlight fan, with VerticalScale
                 // well under 1. Tuned in-game and pasted back here, and seeds the focused live copy.

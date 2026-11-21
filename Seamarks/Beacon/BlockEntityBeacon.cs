@@ -247,7 +247,7 @@ public class BlockEntityBeacon : BlockEntity
     // to decide whether to advance the angle. Exposed for anything that only makes sense while the beam is
     // moving, like the mechanical squeak.
     public bool IsRotating =>
-        BeaconArchetypeData.Of(tier).Beam.Pattern == BeamPattern.Rotating
+        BeaconArchetypeData.Of(tier).Beam.Directional
         && IsBurning
         && (GetBehavior<BEBehaviorBeaconBeam>()?.IsMechanicallyActive ?? false);
 

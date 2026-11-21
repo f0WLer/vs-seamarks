@@ -134,7 +134,7 @@ public static class BeamState
     // before it advances the angle. Anything that only makes sense against a moving beam can gate on this.
     public static bool IsSweeping(BeaconInfo info)
     {
-        return BeaconArchetypeData.Of(info.Tier).Beam.Pattern == BeamPattern.Rotating
+        return BeaconArchetypeData.Of(info.Tier).Beam.Directional
             && info.MechanicalActive
             && info.SweepPeriodHours > 0f
             && info.SweepAnchorTotalHours >= 0;

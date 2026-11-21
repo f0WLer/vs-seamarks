@@ -1,15 +1,5 @@
 namespace Seamarks.Beacon;
 
-// How a beam moves. Static per archetype, since whether it's currently rotating lives on
-// BeaconInfo.MechanicalActive. This only says what motion the optic is capable of.
-public enum BeamPattern
-{
-    Fixed = 0,    // holds its placement heading
-    Rotating = 1, // sweeps at a rate set by the driving shaft, scaled off RotationPeriodHours
-    // Oscillating, dual-opposing and signature flashes would go here, once something actually consumes
-    // them.
-}
-
 // The geometry and appearance of a beam cone, meaning everything about its look that doesn't depend on
 // motion. A directional beacon carries two of these, one focused (lens fitted) and one unfocused (bare
 // lamp, or a housing with no panel), picked between per beacon off BeaconInfo.HasFocusingLens. Values are
@@ -51,12 +41,11 @@ public readonly struct BeamProfile
     // on the client to ask.
     public required bool Directional { get; init; }
 
-    public required BeamPattern Pattern { get; init; }
-
     // One full revolution per this many calendar hours at BeamState.ReferenceShaftSpeed, or 0 to never
     // rotate. The actual period scales inversely with the driving shaft's speed, so this is the middle of
     // the range and not a fixed rate. Calendar hours and not real seconds, so every client works out the
-    // same phase from the shared clock. Ignored unless Pattern is Rotating.
+    // same phase from the shared clock. Every directional tier today rotates; a fixed-cone directional
+    // beam would need its own flag if one is ever added.
     public required float RotationPeriodHours { get; init; }
 
     // The two optic looks, picked per beacon off HasFocusingLens. Focused is the tight, bright, flattened
@@ -69,7 +58,6 @@ public readonly struct BeamProfile
     public static readonly BeamProfile None = new()
     {
         Directional = false,
-        Pattern = BeamPattern.Fixed,
         RotationPeriodHours = 0f,
         Focused = BeamShape.Zero,
         Unfocused = BeamShape.Zero,

@@ -80,13 +80,9 @@ public class BEBehaviorBeaconBeam : BEBehaviorBeacon, IBeaconInfoContributor, IB
         double now = BeamState.SweepNowHours(Api!.World);
         BeamProfile beam = BeaconArchetypeData.Of(Beacon.Tier).Beam;
 
-        // Where the beam is pointing right now, under the period it has been using.
-        float angleNow = headingRad;
-        if (sweepPeriodHours > 0f && sweepAnchorTotalHours >= 0)
-        {
-            double revs = (now - sweepAnchorTotalHours) / sweepPeriodHours;
-            angleNow = sweepAnchorRad + (float)(GameMath.Mod(revs, 1.0) * GameMath.TWOPI);
-        }
+        // Where the beam is pointing right now, under the period it has been using. SweepHeadingRad's own
+        // guards fall back to headingRad when there's no period or anchor yet to sweep from.
+        float angleNow = BeamState.SweepHeadingRad(true, headingRad, sweepAnchorRad, sweepAnchorTotalHours, sweepPeriodHours, now);
 
         lastQuantizedSpeed = quantized;
         sweepAnchorRad = GameMath.Mod(angleNow, GameMath.TWOPI);

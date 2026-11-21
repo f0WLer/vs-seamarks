@@ -85,8 +85,10 @@ public class BlockEntityBeacon : BlockEntity
         // drawing it while there's no housing, which keeps attaching one from needing a mesh rebuild.
         if (api is ICoreClientAPI capi && BeaconArchetypeData.Of(tier).Beam.Directional)
         {
-            MeshData? mesh = BuildReflectorMesh(capi);
-            if (mesh != null) reflectorRenderer = new Client.ReflectorRenderer(capi, this, mesh, BuildHousingMesh(capi), BuildGearMesh(capi));
+            MeshData reflectorMesh = BuildArgandSubtreeMesh(capi, "reflector", ReflectorExcludedRoots);
+            MeshData gearMesh = BuildArgandSubtreeMesh(capi, "gear", GearExcludedRoots);
+            reflectorRenderer = new Client.ReflectorRenderer(capi, this, reflectorMesh, BuildHousingMesh(capi),
+                gearMesh.VerticesCount > 0 ? gearMesh : null);
             var initHousing = GetBehavior<BEBehaviorBeaconReflector>()?.Housing;
             renderedHousingKey = initHousing?.PanelKey();
         }
@@ -121,36 +123,22 @@ public class BlockEntityBeacon : BlockEntity
         reflectorRenderer = null;
     }
 
-    // Tesselates just the Reflector subtree by ignoring every other root element. Textures resolve off
-    // this block's texture source (the blocktype defines every #brass/#candle key). Returned to the
-    // renderer, which uploads it and draws it rotated to the heading each frame.
-    private MeshData? BuildReflectorMesh(ICoreClientAPI capi)
+    // Tesselates one subtree of the argandbeacon shape by ignoring every other root element. Textures
+    // resolve off this block's texture source (the blocktype defines every #brass/#candle key). Shared by
+    // the Reflector subtree (returned to the renderer, which uploads it and draws it rotated to the
+    // heading each frame) and the VS_Gear subtree (tesselated on its own so it can keep spinning in view
+    // even when a multi-panel housing hides the reflector behind it).
+    private MeshData BuildArgandSubtreeMesh(ICoreClientAPI capi, string cacheKeySuffix, string[] excludedRoots)
     {
-        var reflectorShape = new CompositeShape
+        var shape = new CompositeShape
         {
             Base = new AssetLocation(SeamarksModSystem.Domain, "block/lighthouse/argandbeacon"),
-            IgnoreElements = ReflectorExcludedRoots,
+            IgnoreElements = excludedRoots,
         };
         capi.Tesselator.TesselateShape(
-            "seamarks:argandbeacon-reflector", reflectorShape.Base, reflectorShape,
+            "seamarks:argandbeacon-" + cacheKeySuffix, shape.Base, shape,
             out MeshData mesh, capi.Tesselator.GetTextureSource(Block));
         return mesh;
-    }
-
-    // VS_Gear, tesselated on its own so it can keep spinning in view even when a multi-panel housing hides
-    // the reflector behind it. Null (not an empty mesh) whenever the shape has no such root, so a beacon
-    // built against an older argandbeacon.json degrades to just not showing a gear, nothing worse.
-    private MeshData? BuildGearMesh(ICoreClientAPI capi)
-    {
-        var gearShape = new CompositeShape
-        {
-            Base = new AssetLocation(SeamarksModSystem.Domain, "block/lighthouse/argandbeacon"),
-            IgnoreElements = GearExcludedRoots,
-        };
-        capi.Tesselator.TesselateShape(
-            "seamarks:argandbeacon-gear", gearShape.Base, gearShape,
-            out MeshData mesh, capi.Tesselator.GetTextureSource(Block));
-        return mesh.VerticesCount > 0 ? mesh : null;
     }
 
     // The fitted optic is the same composed Optics Housing model as the standalone block, panelled to the

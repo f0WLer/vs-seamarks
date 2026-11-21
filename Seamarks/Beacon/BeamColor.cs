@@ -21,9 +21,13 @@ public static class BeamColor
 
     // Resolves beam `beamIndex`'s color to 0..1 RGB: its override if one is set, otherwise the tier
     // tint. Out-of-range indices and unset/absent slots both fall back, so callers never special-case.
-    public static void Resolve(BeaconInfo info, int beamIndex, in BeaconArchetypeData archetype, out float r, out float g, out float b)
+    public static void Resolve(BeaconInfo info, int beamIndex, in BeaconArchetypeData archetype, out float r, out float g, out float b) =>
+        ResolveFrom(info.BeamColors, beamIndex, in archetype, out r, out g, out b);
+
+    // The same resolution off a raw color-override array, for BeamSignature.ResolveBeamColor, which has
+    // no BeaconInfo to read (a ground housing isn't fitted to a beacon yet).
+    public static void ResolveFrom(int[]? colors, int beamIndex, in BeaconArchetypeData archetype, out float r, out float g, out float b)
     {
-        int[]? colors = info.BeamColors;
         if (colors != null && (uint)beamIndex < (uint)colors.Length && colors[beamIndex] >= 0)
         {
             Unpack(colors[beamIndex], out r, out g, out b);

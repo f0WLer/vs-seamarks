@@ -132,19 +132,12 @@ public sealed class BeamSignature
     }
 
     // A beam's display color, 0..1 RGB: its override if set, else the oil lamp's tier tint. The housing
-    // GUI paints each panel's name in this, so it matches the beam it drives. Mirrors BeamColor.Resolve,
-    // which needs a live BeaconInfo the ground housing doesn't have.
+    // GUI paints each panel's name in this, so it matches the beam it drives. Uses BeamColor.ResolveFrom
+    // since a ground housing has no live BeaconInfo to read.
     public void ResolveBeamColor(int beamIndex, out float r, out float g, out float b)
     {
         ref readonly BeaconArchetypeData archetype = ref BeaconArchetypeData.Of(BeaconTier.OilLamp);
-        if ((uint)beamIndex < (uint)colors.Length && colors[beamIndex] >= 0)
-        {
-            BeamColor.Unpack(colors[beamIndex], out r, out g, out b);
-            return;
-        }
-        r = archetype.ColorR;
-        g = archetype.ColorG;
-        b = archetype.ColorB;
+        BeamColor.ResolveFrom(colors, beamIndex, in archetype, out r, out g, out b);
     }
 
     // Prefixed so a signature can share a tree with whatever else the owning block entity stores.

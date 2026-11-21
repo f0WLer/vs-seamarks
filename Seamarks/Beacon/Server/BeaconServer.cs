@@ -140,12 +140,12 @@ public sealed class BeaconServer : IDisposable
             ? ComputeVisibleSet(entity.Pos.XYZ.Add(entity.LocalEyePos))
             : [];
 
-        var beacons = visible
-            .Select(pos => registry.TryGet(pos, out var info) ? info : null)
-            .Where(info => info != null)
-            .Select(info => info!)
-            .ToArray();
-        channel.SendPacket(new BeaconFullSyncPacket { Beacons = beacons }, player);
+        var beacons = new List<BeaconInfo>(visible.Count);
+        foreach (var pos in visible)
+        {
+            if (registry.TryGet(pos, out var info)) beacons.Add(info);
+        }
+        channel.SendPacket(new BeaconFullSyncPacket { Beacons = [.. beacons] }, player);
 
         foreach (var pos in visible)
         {

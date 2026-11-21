@@ -5,9 +5,9 @@ namespace Seamarks.Beacon.Client;
 public sealed class BeaconClient : IDisposable
 {
     public BeaconClientRegistry Registry { get; }
-    public BeaconGazeWatcher GazeWatcher { get; }
-    public BeaconPointLights PointLights { get; }
-    public GuiDialogBeamTuning TuningPanel { get; } // opened with Ctrl+B
+    private readonly BeaconGazeWatcher gazeWatcher;
+    private readonly BeaconPointLights pointLights;
+    private readonly GuiDialogBeamTuning tuningPanel; // opened with Ctrl+B
     private readonly BeaconBlipRenderer blipRenderer;
     private readonly BeamRenderer beamRenderer;
     private readonly BeaconBeamParticles beamParticles;
@@ -18,20 +18,20 @@ public sealed class BeaconClient : IDisposable
         Registry = new BeaconClientRegistry(capi);
         blipRenderer = new BeaconBlipRenderer(modSystem, capi);
         beamRenderer = new BeamRenderer(modSystem, capi);
-        PointLights = new BeaconPointLights(modSystem, capi);
+        pointLights = new BeaconPointLights(modSystem, capi);
         beamParticles = new BeaconBeamParticles(modSystem, capi);
-        GazeWatcher = new BeaconGazeWatcher(capi, this);
-        TuningPanel = new GuiDialogBeamTuning(capi);
+        gazeWatcher = new BeaconGazeWatcher(capi, this);
+        tuningPanel = new GuiDialogBeamTuning(capi);
     }
 
     public void Dispose()
     {
         blipRenderer.Dispose();
         beamRenderer.Dispose();
-        PointLights.Dispose();
+        pointLights.Dispose();
         beamParticles.Dispose();
-        GazeWatcher.Dispose();
-        TuningPanel.Dispose();
+        gazeWatcher.Dispose();
+        tuningPanel.Dispose();
         // Last, mirroring the constructor, where it runs first: the renderers read it while they tear down.
         BeamQuality.Shutdown();
     }

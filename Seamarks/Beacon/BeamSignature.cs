@@ -117,7 +117,6 @@ public sealed class BeamSignature
     public void ApplyTo(BeaconInfo info)
     {
         info.BeamCount = panels.Count;
-        info.BeamWidthDeg = BeaconInfo.DefaultBeamWidthDeg; // fallback, unused once the per-beam array is set
         info.BeamColors = HasColorOverride() ? (int[])colors.Clone() : null;
 
         if (panels.Count == 0) { info.BeamWidthsDeg = null; return; }

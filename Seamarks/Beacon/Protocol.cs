@@ -60,110 +60,86 @@ public class BeaconSweepSyncPacket
     [ProtoMember(1)] public double ServerSweepHours { get; set; }
 }
 
-// Server to client: the effective per-tier tuning, sent once on join. Everything the client reads to
-// draw fade, cutoff and the beam cone rides along; the fuel numbers and the rain-douse flag stay server
-// code's business and never cross. Each array is indexed by the BeaconTier enum, and the plate bonuses
-// are flattened three metals per tier, protobuf handling a flat float array more cleanly than a jagged
-// one.
+// One tier's slice of BeaconTuningPacket. Everything the client reads to draw fade, cutoff and the beam
+// cone lives here; the fuel amounts and the rain-douse flag stay server code's business and never cross.
+[ProtoContract]
+public class BeaconTierTuning
+{
+    [ProtoMember(1)] public float BaseRangeBlocks;
+    [ProtoMember(2)] public float RangePerElevationBlock;
+    [ProtoMember(3)] public float ElevationBonusStart;
+    [ProtoMember(4)] public float FalloffStartFraction;
+    [ProtoMember(5)] public float HousingRangeBonus;
+    [ProtoMember(6)] public float[] PlateRangeBonusPerMetal = []; // one entry per PlateMetal
+
+    [ProtoMember(7)] public float FocusedBeamLength;
+    [ProtoMember(8)] public float UnfocusedBeamLength;
+
+    // DefaultValue for the same reason BeaconInfo.BeamCount carries one: protobuf-net skips a field equal
+    // to its declared default, and without this a genuine false would never leave the wire and would read
+    // back as the initializer's true. Both sides need this: each runs the right-click and has to reach the
+    // same verdict on whether the beacon is burning.
+    [ProtoMember(9), DefaultValue(true)] public bool RequiresFuel = true;
+
+    [ProtoMember(10)] public float BlipSizeScale = 1f;
+
+    // The admin-configured solid fuels for this tier, as parallel arrays since protobuf has no tuple
+    // support. Both sides need this too: each runs the right-click and has to reach the same verdict on
+    // whether a held item is fuel.
+    [ProtoMember(11)] public string[] ItemFuelCodes = [];
+    [ProtoMember(12)] public float[] ItemFuelHours = [];
+}
+
+// Server to client: the effective per-tier tuning, sent once on join. One row per tier, indexed by the
+// BeaconTier enum.
 [ProtoContract]
 public class BeaconTuningPacket
 {
-    [ProtoMember(1)] public float[] BaseRangeBlocksByTier = [];
-    [ProtoMember(2)] public float[] RangePerElevationBlockByTier = [];
-    [ProtoMember(3)] public float[] ElevationBonusStartByTier = [];
-    [ProtoMember(4)] public float[] FalloffStartFractionByTier = [];
-    [ProtoMember(5)] public float[] HousingRangeBonusByTier = [];
-    [ProtoMember(6)] public float[] PlateRangeBonusFlat = []; // index tier * 3 + metal
-    [ProtoMember(7)] public float[] FocusedBeamLengthByTier = [];
-    [ProtoMember(8)] public float[] UnfocusedBeamLengthByTier = [];
-    [ProtoMember(9)] public bool[] RequiresFuelByTier = [];
-    [ProtoMember(10)] public float[] BlipSizeScaleByTier = [];
+    [ProtoMember(1)] public BeaconTierTuning[] Tiers = [];
 
     // Not per-tier: which clock every beacon's optic turns on. It has to cross because the server stamps
     // the sweep anchor in this clock's hours and every client reads that anchor back in the same unit.
-    // DefaultValue for the same reason BeaconInfo.BeamCount carries one: protobuf-net skips a field equal
-    // to its declared default, and without this a genuine false would never leave the wire and would read
-    // back as the initializer's true.
-    [ProtoMember(11), DefaultValue(true)] public bool SweepTracksWorldTime = true;
+    [ProtoMember(2), DefaultValue(true)] public bool SweepTracksWorldTime = true;
 
-    // The admin-configured solid fuels, one entry per (tier, code) across these three parallel arrays. The
-    // per-tier lists are jagged, and protobuf takes a flat array more cleanly, which is why the plate
-    // bonuses above are flattened too. Both sides need this: each runs the right-click and has to reach the
-    // same verdict on whether a held item is fuel.
-    [ProtoMember(12)] public int[] ItemFuelTiers = [];
-    [ProtoMember(13)] public string[] ItemFuelCodes = [];
-    [ProtoMember(14)] public float[] ItemFuelHours = [];
-
-    private const int Metals = 3;
-
-    public static BeaconTuningPacket FromCurrent()
+    public static BeaconTuningPacket FromCurrent() => new()
     {
-        var byTier = BeaconArchetypeData.ByTier;
-        var plateFlat = new float[byTier.Length * Metals];
-        for (int i = 0; i < byTier.Length; i++)
+        Tiers = [.. BeaconArchetypeData.ByTier.Select(a => new BeaconTierTuning
         {
-            var perMetal = byTier[i].PlateRangeBonusPerPlateByMetal;
-            for (int m = 0; m < Metals; m++) plateFlat[i * Metals + m] = m < perMetal.Length ? perMetal[m] : 0f;
-        }
-
-        List<int> fuelTiers = [];
-        List<string> fuelCodes = [];
-        List<float> fuelHours = [];
-        for (int i = 0; i < byTier.Length; i++)
-        {
-            foreach (var (code, hours) in byTier[i].ConfiguredItemFuels)
-            {
-                fuelTiers.Add(i);
-                fuelCodes.Add(code.ToShortString());
-                fuelHours.Add(hours);
-            }
-        }
-
-        return new BeaconTuningPacket
-        {
-            BaseRangeBlocksByTier = [.. byTier.Select(a => a.BaseRangeBlocks)],
-            RangePerElevationBlockByTier = [.. byTier.Select(a => a.RangePerElevationBlock)],
-            ElevationBonusStartByTier = [.. byTier.Select(a => a.ElevationBonusStart)],
-            FalloffStartFractionByTier = [.. byTier.Select(a => a.FalloffStartFraction)],
-            HousingRangeBonusByTier = [.. byTier.Select(a => a.HousingRangeBonus)],
-            PlateRangeBonusFlat = plateFlat,
-            FocusedBeamLengthByTier = [.. byTier.Select(a => a.Beam.Focused.LengthBlocks)],
-            UnfocusedBeamLengthByTier = [.. byTier.Select(a => a.Beam.Unfocused.LengthBlocks)],
-            RequiresFuelByTier = [.. byTier.Select(a => a.RequiresFuel)],
-            BlipSizeScaleByTier = [.. byTier.Select(a => a.BlipSizeScale)],
-            SweepTracksWorldTime = BeamState.SweepTracksWorldTime,
-            ItemFuelTiers = [.. fuelTiers],
-            ItemFuelCodes = [.. fuelCodes],
-            ItemFuelHours = [.. fuelHours],
-        };
-    }
+            BaseRangeBlocks = a.BaseRangeBlocks,
+            RangePerElevationBlock = a.RangePerElevationBlock,
+            ElevationBonusStart = a.ElevationBonusStart,
+            FalloffStartFraction = a.FalloffStartFraction,
+            HousingRangeBonus = a.HousingRangeBonus,
+            PlateRangeBonusPerMetal = [.. a.PlateRangeBonusPerPlateByMetal],
+            FocusedBeamLength = a.Beam.Focused.LengthBlocks,
+            UnfocusedBeamLength = a.Beam.Unfocused.LengthBlocks,
+            RequiresFuel = a.RequiresFuel,
+            BlipSizeScale = a.BlipSizeScale,
+            ItemFuelCodes = [.. a.ConfiguredItemFuels.Select(f => f.Code.ToShortString())],
+            ItemFuelHours = [.. a.ConfiguredItemFuels.Select(f => f.Hours)],
+        })],
+        SweepTracksWorldTime = BeamState.SweepTracksWorldTime,
+    };
 
     public void ApplyToArchetypes()
     {
         BeamState.SweepTracksWorldTime = SweepTracksWorldTime;
 
         var byTier = BeaconArchetypeData.ByTier;
-        var fuelsByTier = new List<(AssetLocation, float)>[byTier.Length];
-
-        // Regrouped off the flat arrays. The tier range check is what keeps a packet from a version that
-        // knows more tiers than this build from indexing off the end, and TryParseCode drops any code that
-        // didn't survive the trip.
-        int fuelCount = Math.Min(ItemFuelTiers.Length, Math.Min(ItemFuelCodes.Length, ItemFuelHours.Length));
-        for (int f = 0; f < fuelCount; f++)
-        {
-            int tier = ItemFuelTiers[f];
-            if (tier < 0 || tier >= byTier.Length) continue;
-            if (!BeaconArchetypeData.TryParseCode(ItemFuelCodes[f], out AssetLocation? fuelCode)) continue;
-            (fuelsByTier[tier] ??= []).Add((fuelCode, ItemFuelHours[f]));
-        }
-
         for (int i = 0; i < byTier.Length; i++)
         {
-            var plateBonus = new float[Metals];
-            for (int m = 0; m < Metals; m++)
+            // A packet from a version with fewer tiers than this build knows about defaults the extra
+            // ones to an empty row instead of indexing off the end.
+            BeaconTierTuning row = i < Tiers.Length ? Tiers[i] : new BeaconTierTuning();
+
+            List<(AssetLocation, float)> fuels = [];
+            int fuelCount = Math.Min(row.ItemFuelCodes.Length, row.ItemFuelHours.Length);
+            for (int f = 0; f < fuelCount; f++)
             {
-                int idx = i * Metals + m;
-                plateBonus[m] = idx < PlateRangeBonusFlat.Length ? PlateRangeBonusFlat[idx] : 0f;
+                if (BeaconArchetypeData.TryParseCode(row.ItemFuelCodes[f], out AssetLocation? fuelCode))
+                {
+                    fuels.Add((fuelCode, row.ItemFuelHours[f]));
+                }
             }
 
             // The fuel amounts and the rain-douse flag never sync, and the client never reads them, so
@@ -172,26 +148,22 @@ public class BeaconTuningPacket
             var current = byTier[i];
             BeaconArchetypeData.ApplyTuning((BeaconTier)i, new BeaconArchetypeData.AppliedTuning
             {
-                BaseRangeBlocks = AtOrZero(BaseRangeBlocksByTier, i),
-                RangePerElevationBlock = AtOrZero(RangePerElevationBlockByTier, i),
-                ElevationBonusStart = AtOrZero(ElevationBonusStartByTier, i),
-                FalloffStartFraction = AtOrZero(FalloffStartFractionByTier, i),
-                HousingRangeBonus = AtOrZero(HousingRangeBonusByTier, i),
-                PlateRangeBonusPerMetal = plateBonus,
-                FocusedBeamLength = AtOrZero(FocusedBeamLengthByTier, i),
-                UnfocusedBeamLength = AtOrZero(UnfocusedBeamLengthByTier, i),
+                BaseRangeBlocks = row.BaseRangeBlocks,
+                RangePerElevationBlock = row.RangePerElevationBlock,
+                ElevationBonusStart = row.ElevationBonusStart,
+                FalloffStartFraction = row.FalloffStartFraction,
+                HousingRangeBonus = row.HousingRangeBonus,
+                PlateRangeBonusPerMetal = row.PlateRangeBonusPerMetal,
+                FocusedBeamLength = row.FocusedBeamLength,
+                UnfocusedBeamLength = row.UnfocusedBeamLength,
                 FuelHoursPerLitre = current.FuelHoursPerLitre,
                 MaxFuelHours = current.MaxFuelHours,
                 FuelBurnTimeMultiplier = current.FuelBurnTimeMultiplier,
                 RainDouseEnabled = current.RainDouseEnabled,
-                RequiresFuel = i < RequiresFuelByTier.Length ? RequiresFuelByTier[i] : true,
-                BlipSizeScale = i < BlipSizeScaleByTier.Length ? BlipSizeScaleByTier[i] : 1f,
-                ConfiguredItemFuels = fuelsByTier[i] == null ? [] : [.. fuelsByTier[i]],
+                RequiresFuel = row.RequiresFuel,
+                BlipSizeScale = row.BlipSizeScale,
+                ConfiguredItemFuels = [.. fuels],
             });
         }
     }
-
-    // Tolerates an array shorter than the tier count, which a version mismatch between server and client
-    // could produce, by reading a missing entry as zero instead of throwing.
-    private static float AtOrZero(float[] arr, int i) => i < arr.Length ? arr[i] : 0f;
 }

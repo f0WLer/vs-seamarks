@@ -41,7 +41,6 @@ public sealed class BeaconInfo
     // initializer's 1, quietly reporting a lens that isn't there. DefaultValue moves the skip-point onto 1
     // instead, so a real 0 always gets sent.
     [ProtoMember(10), DefaultValue(DefaultBeamCount)] public int BeamCount { get; set; } = DefaultBeamCount;
-    [ProtoMember(11)] public float BeamWidthDeg { get; set; } = DefaultBeamWidthDeg;
 
     // Optional per-beam color overrides, packed 0xRRGGBB; index i is beam i's color, a slot of -1
     // (or an absent/short array) means "use the tier tint". Null in the common all-default case, so
@@ -49,8 +48,8 @@ public sealed class BeaconInfo
     [ProtoMember(12)] public int[]? BeamColors { get; set; }
 
     // Optional per-beam angular-width overrides in degrees; index i is beam i's width, a slot of <= 0
-    // (or an absent/short array) means "use the beacon-wide BeamWidthDeg above". Null when every beam
-    // shares the base width, so an unmixed beacon adds nothing to the wire/disk form.
+    // (or an absent/short array) means "use DefaultBeamWidthDeg". Null when every beam shares the base
+    // width, so an unmixed beacon adds nothing to the wire/disk form.
     [ProtoMember(13)] public float[]? BeamWidthsDeg { get; set; }
 
     // The sweep, anchored so it stays continuous when the drive speed changes. A time-anchored angle
@@ -83,13 +82,13 @@ public sealed class BeaconInfo
         }
     }
 
-    // Beam beamIndex's angular width in degrees: its override if one is set, else the beacon-wide base
-    // (which also covers pre-feature snapshots, where BeamWidthsDeg is null). Mirrors BeamColor.Resolve.
+    // Beam beamIndex's angular width in degrees: its override if one is set, else the default (which
+    // also covers pre-feature snapshots, where BeamWidthsDeg is null). Mirrors BeamColor.Resolve.
     public float BeamWidthDegOf(int beamIndex)
     {
         float[]? w = BeamWidthsDeg;
         if (w != null && (uint)beamIndex < (uint)w.Length && w[beamIndex] > 0f) return w[beamIndex];
-        return BeamWidthDeg;
+        return DefaultBeamWidthDeg;
     }
 
     public bool IsBurning(double nowTotalHours) =>

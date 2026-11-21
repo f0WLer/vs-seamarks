@@ -65,7 +65,7 @@ public class BEBehaviorBeaconBeam : BEBehaviorBeacon, IBeaconInfoContributor, IB
         info.SweepAnchorTotalHours = sweepAnchorTotalHours;
         info.SweepPeriodHours = sweepPeriodHours;
         // No housing fitted means the plain single beam, decided here once so no renderer has to check.
-        BeamSignature signature = Beacon.GetBehavior<BEBehaviorBeaconReflector>()?.Housing ?? BeamSignature.None;
+        BeamSignature signature = Beacon.Housing ?? BeamSignature.None;
         signature.ApplyTo(info);
     }
 

@@ -84,17 +84,17 @@ public class BlockEntityBeacon : BlockEntity
             if (rate > 0f) fuelPoolLitres = fuelPoolHours / rate;
         }
 
-        // The rotating optic is a client render concern and only exists on directional (OilLamp) tiers.
-        // The lens mesh is uploaded alongside it whether or not one is fitted, and the renderer just skips
-        // drawing it while there's no housing, which keeps attaching one from needing a mesh rebuild.
+        // The rotating optic is a client render concern and only exists on directional (OilLamp) tiers. A
+        // fitted housing's mesh goes to the renderer through RefreshHousingMesh, here and again whenever
+        // the housing changes.
         if (api is ICoreClientAPI capi && BeaconArchetypeData.Of(tier).Beam.Directional)
         {
             MeshData reflectorMesh = BuildArgandSubtreeMesh(capi, "reflector", ReflectorExcludedRoots);
             MeshData gearMesh = BuildArgandSubtreeMesh(capi, "gear", GearExcludedRoots);
-            reflectorRenderer = new Client.ReflectorRenderer(capi, this, reflectorMesh, BuildHousingMesh(capi),
+            reflectorRenderer = new Client.ReflectorRenderer(capi, this, reflectorMesh, housingMesh: null,
                 gearMesh.VerticesCount > 0 ? gearMesh : null);
-            var initHousing = GetBehavior<BEBehaviorBeaconReflector>()?.Housing;
-            renderedHousingKey = initHousing?.PanelKey();
+            renderedHousingKey = null; // a fresh renderer has no housing mesh yet, whatever it showed before
+            RefreshHousingMesh(capi);
         }
 
         if (api.Side == EnumAppSide.Server)
@@ -163,27 +163,18 @@ public class BlockEntityBeacon : BlockEntity
         return mesh;
     }
 
-    // The fitted optic is the same composed Optics Housing model as the standalone block, panelled to the
-    // beacon's beam count and returned already split into its opaque and glass halves. The shape is
-    // authored in the lamp's own coordinate space, so drawing it at the beacon origin under the reflector's
-    // rotation lines it up with no maths here; the optic renderer supplies both. Null while nothing is
-    // fitted, so the renderer draws only the bare reflector.
-    private MeshData? BuildHousingMesh(ICoreClientAPI capi)
-    {
-        var housing = GetBehavior<BEBehaviorBeaconReflector>()?.Housing;
-        if (housing == null) return null;
-        return Client.OpticsHousingMesh.Get(capi, housing);
-    }
-
     // The panel sequence the fitted optic was last built for, so a change to it (an attach, detach, or a
     // panel added/removed) rebuilds the mesh without redoing it every frame. Null means nothing is fitted.
     private string? renderedHousingKey;
 
-    // Rebuilds the fitted optic's mesh when what it should show has changed. Cheap on a repeat because
+    // Hands the renderer the fitted optic's mesh when what it should show has changed. That's the same
+    // composed Optics Housing model as the standalone block, panelled to the beacon's beam count, in the
+    // lamp's own coordinate space so it lines up under the reflector's rotation with no maths here. Null
+    // while nothing is fitted, so the renderer draws only the bare reflector. Cheap on a repeat because
     // OpticsHousingMesh caches one mesh per configuration; this only re-splits and re-uploads.
     private void RefreshHousingMesh(ICoreClientAPI capi)
     {
-        var housing = GetBehavior<BEBehaviorBeaconReflector>()?.Housing;
+        var housing = Housing;
         string? key = housing?.PanelKey();
         if (key == renderedHousingKey) return;
         renderedHousingKey = key;
@@ -397,7 +388,7 @@ public class BlockEntityBeacon : BlockEntity
         bool burning = IsBurning;
         if (Api?.Side == EnumAppSide.Server)
         {
-            ReconcileListener(ref expiryCheckListenerId, burning, CheckBurnExpiry);
+            BEBehaviorBeacon.ReconcileListener(this, ref expiryCheckListenerId, burning, CheckBurnExpiry);
         }
         NotifyBurnListeners(burning);
         PushToRegistry();
@@ -410,9 +401,6 @@ public class BlockEntityBeacon : BlockEntity
             (behavior as IBeaconBurnListener)?.OnBurnStateChanged(burning);
         }
     }
-
-    private void ReconcileListener(ref long id, bool shouldRun, Action<float> callback) =>
-        BEBehaviorBeacon.ReconcileListener(this, ref id, shouldRun, callback);
 
     // Called by a capability behavior when its contributed state changes (plate added, housing fitted,
     // mechanical toggled, heading set), and by the core's own fuel changes: re-sync to clients and

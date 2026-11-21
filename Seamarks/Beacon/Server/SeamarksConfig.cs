@@ -32,6 +32,8 @@ public class SeamarksConfig
         MaxFuelLitres = 4f,
         FuelHoursPerLitre = 6f,
         HousingRangeBonus = 500f,
+        // Electrum reflects best and gold worst. A full set of four electrum plates should clearly outrange
+        // four of either other metal.
         PlateRangeBonusPerMetal = [110f, 150f, 250f],
         VisualBeamLength = 128f,
         VisualBeamNoHousingLength = 100f,

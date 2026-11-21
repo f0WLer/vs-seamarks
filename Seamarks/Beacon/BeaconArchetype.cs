@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Seamarks.Beacon.Server;
 using Vintagestory.API.Common;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
@@ -22,22 +23,22 @@ public enum PlateMetal
     Electrum = 2,
 }
 
-// Kept in code and not JSON while these numbers are still being balanced. The player-configurable subset
-// is exposed through SeamarksConfig.
+// Per-tier constants (tints, blip placement, which fuels a tier takes) live here in code. The numbers an
+// admin can retune are filled in from SeamarksConfig, so they have no value in the table below.
 public readonly struct BeaconArchetypeData
 {
     public required string VariantCode { get; init; } // matches Block.Variant["tier"]
 
     // Reach in blocks with the light sitting at sea level, before any elevation, plates or housing.
-    public required float BaseRangeBlocks { get; init; }
+    public float BaseRangeBlocks { get; init; }
 
     // Blocks of range gained per block the light stands above ElevationBonusStart, so a taller tower
     // reaches further along a straight line. Zero makes placement height count for nothing.
-    public required float RangePerElevationBlock { get; init; }
+    public float RangePerElevationBlock { get; init; }
 
     // Height above sea level where that elevation bonus starts counting. A beacon below it gets only
     // BaseRangeBlocks, so one at or under the waterline still lights the same as one on the shore.
-    public required float ElevationBonusStart { get; init; }
+    public float ElevationBonusStart { get; init; }
 
     public required float ColorR { get; init; } // blip tint, 0-1
     public required float ColorG { get; init; }
@@ -48,7 +49,7 @@ public readonly struct BeaconArchetypeData
     // Player-tunable multiplier on BlipSize (and, for Fire, its smoke blip too), left at 1 unless an
     // admin changes it. Kept separate from BlipSize itself so the base per-tier art direction and the
     // config override never fight over the same field.
-    public required float BlipSizeScale { get; init; }
+    public float BlipSizeScale { get; init; }
 
     // Where the blip draws, relative to the block position. Fire is a 2x2x2 multiblock whose position
     // is the anchor corner, so this recenters the blip across the footprint; OilLamp is one block, so
@@ -62,16 +63,16 @@ public readonly struct BeaconArchetypeData
     // burn duration instead.
     public required string[] FuelPathKeywords { get; init; }
 
-    public required float FuelHoursPerLitre { get; init; } // OilLamp only
-    public required float MaxFuelHours { get; init; } // fuel pool cap, in burn-hours, both tiers
+    public float FuelHoursPerLitre { get; init; } // OilLamp only
+    public float MaxFuelHours { get; init; } // fuel pool cap, in burn-hours, both tiers
 
-    public required float FuelBurnTimeMultiplier { get; init; } // Fire only, scales each fuel item's own burn time
+    public float FuelBurnTimeMultiplier { get; init; } // Fire only, scales each fuel item's own burn time
 
-    public required bool RainDouseEnabled { get; init; } // whether heavy unsheltered rain can put it out (Fire only)
+    public bool RainDouseEnabled { get; init; } // whether heavy unsheltered rain can put it out (Fire only)
 
     // When false, the beacon lights with no fuel and never burns out. Read on both sides (it decides the
     // client's own IsBurning too), so it rides the tuning packet, unlike the other fuel fields.
-    public required bool RequiresFuel { get; init; }
+    public bool RequiresFuel { get; init; }
 
     // False for OilLamp, which only takes oil out of a container. Otherwise anything that happens to
     // satisfy AcceptsFuel, this mod's own blocks included, could be shoved in by hand. A tier with this
@@ -88,14 +89,14 @@ public readonly struct BeaconArchetypeData
     // owns whether a tier can actually gain them.
     public required int MaxPlates { get; init; }
     public required float[] PlateRangeBonusPerPlateByMetal { get; init; } // indexed by (int)PlateMetal
-    public required float HousingRangeBonus { get; init; } // flat bonus, not stackable like plates
+    public float HousingRangeBonus { get; init; } // flat bonus, not stackable like plates
 
     // The complete static beam description (directionality, motion, shape). Read client-side off the
     // flat archetype because a far beacon has no block entity there to ask. Consolidates what used to
     // be a lone SupportsDirectionalBeam flag plus a rotation-period float.
     public required BeamProfile Beam { get; init; }
 
-    public required float FalloffStartFraction { get; init; } // fraction of max range where the blip starts dimming
+    public float FalloffStartFraction { get; init; } // fraction of max range where the blip starts dimming
 
     // Mutable in place through ApplyTuning, which is the one path meant to write it. Kept inside the
     // assembly so another mod can't reach in and rewrite this mod's balance numbers.
@@ -104,53 +105,30 @@ public readonly struct BeaconArchetypeData
         new BeaconArchetypeData
         {
             VariantCode = "fire",
-            BaseRangeBlocks = 700f,
-            RangePerElevationBlock = 4f,
-            ElevationBonusStart = 0f,
             ColorR = 1f, ColorG = 0.55f, ColorB = 0.2f,
             BlipSize = 4.32f,
-            BlipSizeScale = 1f,
             BlipOffsetX = 0.5f, BlipOffsetY = 1.75f, BlipOffsetZ = 0.5f, // center of the 1x1 footprint, up near the flame
             FuelPathKeywords = [],
-            FuelHoursPerLitre = 0f,
-            MaxFuelHours = 24f,
-            FuelBurnTimeMultiplier = 1f,
-            RainDouseEnabled = true,
-            RequiresFuel = true,
             AcceptsHeldItemFuel = true,
             ConfiguredItemFuels = [],
             MaxPlates = 0,
-            PlateRangeBonusPerPlateByMetal = [0f, 0f, 0f],
-            HousingRangeBonus = 0f,
+            PlateRangeBonusPerPlateByMetal = [],
             Beam = BeamProfile.None,
-            FalloffStartFraction = 0.8f,
         },
         new BeaconArchetypeData
         {
             VariantCode = "oillamp",
-            BaseRangeBlocks = 1000f,
-            RangePerElevationBlock = 4f,
-            ElevationBonusStart = 0f,
             ColorR = 1f, ColorG = 0.9f, ColorB = 0.65f,
             BlipSize = 6f,
-            BlipSizeScale = 1f,
             // X and Z off the reflector's rotation pivot, Y off the panel's own height, not the pivot's: a
             // beam this narrow makes the difference between "near the optic" and "the optic" obvious up
             // close, even though it never showed on the far blip's own tiny dot.
             BlipOffsetX = BlockEntityBeacon.ModelPivot.X, BlipOffsetY = BlockEntityBeacon.ReflectorOpeningYFraction, BlipOffsetZ = BlockEntityBeacon.ModelPivot.Z,
             FuelPathKeywords = ["oilportion"],
-            FuelHoursPerLitre = 6f,
-            MaxFuelHours = 24f, // kept in sync with 4L * 6h/L in SeamarksConfig.ApplyToArchetypes
-            FuelBurnTimeMultiplier = 0f,
-            RainDouseEnabled = false,
-            RequiresFuel = true,
             AcceptsHeldItemFuel = false,
             ConfiguredItemFuels = [],
             MaxPlates = 4,
-            // Electrum reflects best and gold worst. A full set of four electrum plates should clearly
-            // outrange four of either other metal.
-            PlateRangeBonusPerPlateByMetal = [110f, 150f, 250f],
-            HousingRangeBonus = 500f,
+            PlateRangeBonusPerPlateByMetal = [],
             Beam = new BeamProfile
             {
                 Directional = true,
@@ -159,7 +137,7 @@ public readonly struct BeaconArchetypeData
                 // well under 1. Tuned in-game and pasted back here, and seeds the focused live copy.
                 Focused = new BeamShape
                 {
-                    LengthBlocks = 128f,
+                    LengthBlocks = 0f, // from SeamarksConfig.OilLamp.VisualBeamLength
                     NearRadiusBlocks = 0.08f,
                     FarRadiusBlocks = 11f,
                     HorizontalScale = 1.6f,
@@ -175,7 +153,7 @@ public readonly struct BeaconArchetypeData
                 // halo and core. Seeds the unfocused live copy.
                 Unfocused = new BeamShape
                 {
-                    LengthBlocks = 100f,
+                    LengthBlocks = 0f, // from SeamarksConfig.OilLamp.VisualBeamNoHousingLength
                     NearRadiusBlocks = 0.2f,
                     FarRadiusBlocks = 10.4f,
                     HorizontalScale = 1.32f,
@@ -188,9 +166,13 @@ public readonly struct BeaconArchetypeData
                     CoreIntensity = 0.03f,
                 },
             },
-            FalloffStartFraction = 0.8f,
         },
     ];
+
+    // The balance numbers an admin can change (range, fuel, plates, beam length) have their defaults in
+    // SeamarksConfig alone. A static constructor runs once per process, so in singleplayer the client
+    // starting up can't overwrite what the integrated server has already loaded from the config file.
+    static BeaconArchetypeData() => new SeamarksConfig().ApplyToArchetypes();
 
     public static ref readonly BeaconArchetypeData Of(BeaconTier tier)
     {

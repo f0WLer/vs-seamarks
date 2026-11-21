@@ -28,6 +28,9 @@ public class BlockEntityGovernor : BlockEntity
 
     public float SetMaxSpeed(float value)
     {
+        // Clamp passes NaN straight through, and one NaN cap poisons every speed the mechanical network
+        // derives from it.
+        if (!float.IsFinite(value)) return maxSpeed;
         maxSpeed = GameMath.Clamp(value, MinMaxSpeed, MaxMaxSpeed);
         MarkDirty(true);
         return maxSpeed;
@@ -68,6 +71,8 @@ public class BlockEntityGovernor : BlockEntity
         base.OnReceivedClientPacket(fromPlayer, packetid, data);
         if (packetid == SetSpeedPacketId && data?.Length >= 4)
         {
+            // The engine routes block entity packets to any loaded block entity without checking claims.
+            if (!Api.World.Claims.TryAccess(fromPlayer, Pos, EnumBlockAccessFlags.Use)) return;
             SetMaxSpeed(BitConverter.ToSingle(data, 0));
         }
     }

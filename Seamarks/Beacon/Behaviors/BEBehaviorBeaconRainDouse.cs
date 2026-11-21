@@ -37,7 +37,7 @@ public class BEBehaviorBeaconRainDouse : BEBehaviorBeacon, IBeaconBurnListener
     // we're sheltered. Divisor of 5 caps the extinguish chance at 20%/sec in the heaviest rain.
     private void CheckRain(float dt)
     {
-        if (!Beacon.IsBurning) return;
+        if (!Beacon.IsBurning || Beacon.IsEverburning) return;
         if (Api.World.BlockAccessor.GetRainMapHeightAt(Pos.X, Pos.Z) > Pos.Y) return;
 
         checkPos.Set(Pos.X + 0.5, Pos.Y + 0.5, Pos.Z + 0.5);

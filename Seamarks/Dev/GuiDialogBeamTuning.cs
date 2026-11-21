@@ -7,6 +7,7 @@ namespace Seamarks.Beacon.Client;
 // The calibration panel: a light GuiDialog with one slider per BeamTuning knob, so the
 // beam/point-light/dust look can be dialed in live and watched in-world. Moving a slider just calls
 // BeamTuning.TrySet, so geometry knobs still bump GeometryGeneration and the renderer rebuilds the mesh.
+// Debug builds only, since the csproj leaves the Dev folder out of Release.
 //
 // Sliders are integer-only, so each knob maps its [Min, Max] float range onto 0..Steps ticks; the resting
 // text shows the real float value. Two columns keep the whole set on screen without a scrollbar.
@@ -38,7 +39,7 @@ public sealed class GuiDialogBeamTuning : GuiDialog
     {
         if (capi.World.Player.WorldData.CurrentGameMode != EnumGameMode.Creative) return false;
 
-        Compose(); // rebuild so sliders reflect any values changed via the command since last open
+        Compose(); // rebuild so the sliders start from the current values
         return base.TryOpen();
     }
 
@@ -104,7 +105,7 @@ public sealed class GuiDialogBeamTuning : GuiDialog
     {
         return tick =>
         {
-            BeamTuning.TrySet(key, FloatFor(tick, min, max), out _);
+            BeamTuning.TrySet(key, FloatFor(tick, min, max));
             return true;
         };
     }

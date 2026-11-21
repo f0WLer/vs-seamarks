@@ -73,6 +73,8 @@
   <ItemGroup>
     <Compile Remove="obj\**\*.cs" />
     <Compile Remove="bin\**\*.cs" />
+    <!-- Calibration tooling, for Debug builds only. -->
+    <Compile Remove="Dev\**\*.cs" Condition=" '$(Configuration)' != 'Debug' " />
   </ItemGroup>
 
   <Target Name="FailIfNoVsRefs" BeforeTargets="ResolveReferences">

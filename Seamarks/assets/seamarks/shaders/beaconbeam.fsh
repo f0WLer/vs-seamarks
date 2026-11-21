@@ -14,7 +14,7 @@ uniform vec4 beamColor;
 // live here, not CPU-side, so they stay hot-reloadable while calibrating.
 uniform float dayLight;   // ~0 at night, rising above 1 near noon
 uniform float fogDensity;
-// Response curve, driven live by the beam tuning panel.
+// Response curve, set from BeamTuning.
 uniform float fogScale;      // how strongly fog reveals the beam
 uniform float dayFadeLow;    // daylight at which the beam starts fading out
 uniform float dayFadeHigh;   // daylight at which it's fully gone

@@ -48,7 +48,7 @@ public static class GovernorMesh
     // the world draws from the same set of poses, and the eased extension walks the whole range in about a
     // second on a spin-up, so uploading per renderer per step would mean a dispose-and-reupload cycle
     // several times a second for each block). The CPU-side MeshData built along the way is only a stepping
-    // stone to that upload, so it isn't cached itself, or it would pin 25 steps of it alive for nothing.
+    // stone to that upload, so it isn't cached itself, or it would pin every step's copy alive for nothing.
     public static (MultiTextureMeshRef Mesh, Vec3f? SpinPivot)[]? GetUploaded(ICoreClientAPI capi, int step)
     {
         step = GameMath.Clamp(step, 0, ExtensionSteps);

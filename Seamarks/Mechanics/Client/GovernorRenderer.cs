@@ -67,8 +67,8 @@ public sealed class GovernorRenderer : IRenderer
         float spin = be.SpinAngleRad;
 
         rpi.GlToggleBlend(false);
-        // No Tex2D set here: each part draws with the atlas page its own slice of the mesh came from. See
-        // the upload in SetStep for why binding one page isn't enough.
+        // No Tex2D set here: each part draws with the atlas page its own slice of the mesh came from, since
+        // the block atlas can span several pages.
         IStandardShaderProgram prog = rpi.PreparedStandardShader(pos.X, pos.Y, pos.Z);
         prog.ViewMatrix = rpi.CameraMatrixOriginf;
         prog.ProjectionMatrix = rpi.CurrentProjectionMatrix;

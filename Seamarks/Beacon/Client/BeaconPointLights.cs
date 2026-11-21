@@ -11,13 +11,13 @@ namespace Seamarks.Beacon.Client;
 // as the beam points there. Each beam's pair takes that beam's own color. They layer on top of the
 // block's own static light, adding the motion the static grid light can't.
 //
-// A multi-beam beacon therefore uses BeamCount * 2 dynamic lights (up to 6); the engine only renders up
+// A multi-beam beacon therefore uses BeamCount * LightsPerBeam dynamic lights; the engine only renders up
 // to the MaxDynamicLights graphics setting, so a busy scene silently drops some, the same way it does
 // with the block's own lights.
 //
 // Client-side and owned here instead of by the beam behavior, because a far beacon in the client registry
 // may have no block entity loaded at all, and this manager already holds the whole nearby set each tick.
-// The engine does ZERO automatic cleanup of point lights, so every Add is matched by a Remove here: a
+// The engine does no automatic cleanup of point lights, so every Add is matched by a Remove here: a
 // beacon's lights live in its array (rebuilt if its beam count changes), out-of-range/extinguished/gone
 // beacons are pruned each tick, and RemoveAll runs on dispose.
 public sealed class BeaconPointLights : IDisposable

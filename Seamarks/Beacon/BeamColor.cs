@@ -4,8 +4,9 @@ namespace Seamarks.Beacon;
 
 // Per-beam color overrides. Each of a beacon's beams defaults to its tier tint (the archetype
 // ColorR/G/B); a player can override any individual beam with a packed 0xRRGGBB value via the
-// /seamarksbeamcolor command. The overrides live on the beam behaviour, sync on BeaconInfo.BeamColors,
-// and are resolved here so the mesh, dust, point light and far blip all render a beam the same color.
+// /seamarksbeamcolor command. The overrides live on the Optics Housing's BeamSignature, sync on
+// BeaconInfo.BeamColors, and are resolved here so the mesh, dust, point light and far blip all render a
+// beam the same color.
 public static class BeamColor
 {
     // Sentinel in a BeamColors slot, meaning no override and fall back to the tier tint.

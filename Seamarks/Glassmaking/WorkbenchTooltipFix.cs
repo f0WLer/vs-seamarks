@@ -9,9 +9,8 @@ namespace Seamarks.Glassmaking;
 // CraftingRecipeIngredient.ResolvedItemStack unconditionally. That field is only ever populated by the
 // engine for an ingredient with one exact item code (CraftingRecipeIngredient.Resolve leaves it null for
 // anything MatchingType.Exact doesn't cover), so a tag-based tool step throws a null reference the moment
-// either display path runs. Confirmed against Glassmaking's source (references/glassmaking) at both the
-// version this integration was built against and the latest pull: neither ItemUseDescriptor nor
-// ItemUseBehavior null-checks it.
+// either display path runs. Checked against Glassmaking's source at both the version this integration was
+// built against and the latest one: neither ItemUseDescriptor nor ItemUseBehavior null-checks it.
 //
 // This shim only supplies the missing stack, read from a "seamarks:tooltipitem" key we add to the step's
 // own recipeAttributes, the same JSON channel Glassmaking already uses for the blowtorch's temperature.

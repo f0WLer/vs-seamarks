@@ -21,11 +21,6 @@ public sealed class ReflectorRenderer : IRenderer
     // and only turns relative to it once driven.
     private static Vec3f Pivot => BlockEntityBeacon.ModelPivot;
 
-    // Lines the model's built-in forward up with heading 0. The model already points along the beam's
-    // local +Z so this sits at zero, but it's here as a one-line knob if a model edit ever leaves the
-    // optic pointing the wrong way.
-    private const float ForwardOffsetRad = 0f;
-
     // The housing shape faces opposite the reflector, so it draws half a turn round from it about the same
     // axis. It still sweeps with the reflector, just mounted the other way.
     private const float HousingForwardOffsetRad = MathF.PI;
@@ -128,10 +123,10 @@ public sealed class ReflectorRenderer : IRenderer
         }
         else
         {
-            // The reflector and VS_Gear share the same heading (ForwardOffsetRad is 0), so one matrix
-            // serves both draws instead of rebuilding the identical rotation twice.
+            // The reflector and VS_Gear face the beam's own heading, so one matrix serves both draws
+            // instead of rebuilding the identical rotation twice.
             bool drawReflector = meshRef != null && !reflectorHidden;
-            if (drawReflector || gearMeshRef != null) SetModelMatrix(prog, camPos, heading + ForwardOffsetRad);
+            if (drawReflector || gearMeshRef != null) SetModelMatrix(prog, camPos, heading);
 
             // A 2- or 3-beam housing wraps the optic in panels, so the reflector inside would just clip
             // through them and is left undrawn. The opaque stage still runs for the brass housing itself.

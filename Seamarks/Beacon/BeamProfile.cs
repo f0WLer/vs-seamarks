@@ -44,8 +44,7 @@ public readonly struct BeamProfile
     // One full revolution per this many calendar hours at BeamState.ReferenceShaftSpeed, or 0 to never
     // rotate. The actual period scales inversely with the driving shaft's speed, so this is the middle of
     // the range and not a fixed rate. Calendar hours and not real seconds, so every client works out the
-    // same phase from the shared clock. Every directional tier today rotates; a fixed-cone directional
-    // beam would need its own flag if one is ever added.
+    // same phase from the shared clock.
     public required float RotationPeriodHours { get; init; }
 
     // The two optic looks, picked per beacon off HasFocusingLens. Focused is the tight, bright, flattened

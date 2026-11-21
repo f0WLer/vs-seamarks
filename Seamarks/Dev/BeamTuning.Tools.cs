@@ -14,7 +14,7 @@ public static partial class BeamTuning
     // Min and Max bound the GUI sliders. Geometry knobs are flagged so moving one triggers a mesh rebuild.
     private sealed record Knob(Func<float> Get, Action<float> Set, bool Geometry, float Min, float Max);
 
-    // Short keys for the panel, in a stable display order. The 11 shape knobs read and write whichever
+    // Short keys for the panel, in a stable display order. The shape knobs read and write whichever
     // shape EditingFocused selects, and the rest are the shared globals.
     private static readonly Dictionary<string, Knob> Knobs = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -79,7 +79,7 @@ public static partial class BeamTuning
         return false;
     }
 
-    // Current values, one per line, for pasting back into BeaconArchetype. The 11 shape lines show
+    // Current values, one per line, for pasting back into BeaconArchetype. The shape lines show
     // whichever shape is being edited, so switch with the panel's toggle and dump again to get the other
     // one. No angle brackets anywhere in here, because the chat renderer eats the message.
     public static string Dump() =>

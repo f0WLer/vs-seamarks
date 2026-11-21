@@ -3,7 +3,7 @@ namespace Seamarks.Beacon;
 // The live, mutable home for every look knob of the beam. Debug builds add a Ctrl+B panel (the Dev
 // folder) that edits these in game without a rebuild, which is why they're statics and not constants.
 //
-// The 11 shape knobs come in two sets, Focused (lens fitted) and Unfocused (bare lamp, or a housing with
+// The shape knobs come in two sets, Focused (lens fitted) and Unfocused (bare lamp, or a housing with
 // no panel), picked per beacon off BeaconInfo.HasFocusingLens.
 // Everything else (environment, LOD, point light, dust, ignition) is one global set shared by every
 // beacon. Defaults come from the OilLamp archetype's two shapes, so the archetype stays canonical.

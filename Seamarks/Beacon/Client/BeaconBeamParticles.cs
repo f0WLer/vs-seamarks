@@ -65,7 +65,7 @@ public sealed class BeaconBeamParticles : IDisposable
         motes.MaxSize = BeamTuning.DustMaxSize;
         // Per-tick count is the tuned value scaled by the graphics-detail factor, so fewer motes on
         // low presets, on top of the engine's own ParticleLevel pool throttling we already respect.
-        int motesPerBeam = (int)(BeamTuning.DustPerTick * BeamQuality.DustCountFactor);
+        int motesPerBeam = (int)(BeamTuning.DustPerTick * BeamQuality.DetailFactor);
         if (motesPerBeam <= 0) return;
         int alpha = (int)BeamTuning.DustAlpha;
         float rangeSq = BeamTuning.DustRange * BeamTuning.DustRange;

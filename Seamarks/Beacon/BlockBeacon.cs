@@ -79,8 +79,8 @@ public class BlockBeacon : Block
             return TryAddPlate(world, byPlayer, beacon, slot!, metal);
         }
         // Fire ignites on a plain right-click of a torch/firestarter, not vanilla's usual Shift+hold,
-        // since that path can't reach the 2x2x2 multiblock's filler cells, only the anchor. Routing
-        // ignition through this interaction instead lights it identically from any of the 8 cells.
+        // since that path can't reach the multiblock's upper filler cell, only the controller. Routing
+        // ignition through this interaction lights it identically from either cell.
         if (heldStack != null && beacon.Tier == BeaconTier.Fire && IsIgniter(heldStack))
         {
             return TryIgniteWithTorch(world, byPlayer, beacon);

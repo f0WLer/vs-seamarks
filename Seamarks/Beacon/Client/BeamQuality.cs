@@ -53,7 +53,6 @@ public static class BeamQuality
     // Dust is the cheapest layer to shed: off entirely at particleLevel 0, else its per-tick count scales
     // with detail (on top of the engine's own ParticleLevel pool throttling, which we already respect).
     public static bool DustEnabled => capi != null && capi.Settings.Int.Get("particleLevel", 100) > 0;
-    public static float DustCountFactor => DetailFactor;
 
     // The engine renders dynamic lights only up to this cap; at 0 our sweeping light can never show, so
     // skip even registering it. Re-read each tick by the point-light manager (no watcher needed).

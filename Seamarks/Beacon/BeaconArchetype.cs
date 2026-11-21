@@ -51,10 +51,9 @@ public readonly struct BeaconArchetypeData
     // config override never fight over the same field.
     public float BlipSizeScale { get; init; }
 
-    // Where the blip draws, relative to the block position. Fire is a 2x2x2 multiblock whose position
-    // is the anchor corner, so this recenters the blip across the footprint; OilLamp is one block, so
-    // it's just the centre. Distance, fade and visibility maths all stay anchored to the block position,
-    // and this only moves where the blip gets drawn.
+    // Where the blip draws, relative to the block position: up near the flame for Fire, and at the optic
+    // for OilLamp. Distance, fade and visibility maths all stay anchored to the block position, and this
+    // only moves where the blip gets drawn.
     public required float BlipOffsetX { get; init; }
     public required float BlipOffsetY { get; init; }
     public required float BlipOffsetZ { get; init; }
@@ -92,8 +91,7 @@ public readonly struct BeaconArchetypeData
     public float HousingRangeBonus { get; init; } // flat bonus, not stackable like plates
 
     // The complete static beam description (directionality, motion, shape). Read client-side off the
-    // flat archetype because a far beacon has no block entity there to ask. Consolidates what used to
-    // be a lone SupportsDirectionalBeam flag plus a rotation-period float.
+    // flat archetype because a far beacon has no block entity there to ask.
     public required BeamProfile Beam { get; init; }
 
     public float FalloffStartFraction { get; init; } // fraction of max range where the blip starts dimming
@@ -132,7 +130,7 @@ public readonly struct BeaconArchetypeData
             Beam = new BeamProfile
             {
                 Directional = true,
-                RotationPeriodHours = 0.15f, // ~9 real seconds/revolution at the reference shaft speed
+                RotationPeriodHours = 0.15f, // one revolution at the reference shaft speed
                 // With the lens fitted: the tight, bright, flattened searchlight fan, with VerticalScale
                 // well under 1. Tuned in-game and pasted back here, and seeds the focused live copy.
                 Focused = new BeamShape
@@ -262,8 +260,8 @@ public readonly struct BeaconArchetypeData
         return BeaconTier.Fire;
     }
 
-    // Tuned so firewood (24s burn duration) yields the same 0.75h the Fire tier added per item before
-    // fuel started varying by item (charcoal now runs longer than coal, etc).
+    // Turns a fuel item's burn duration in seconds into beacon burn hours, tuned so a piece of firewood
+    // lands where the Fire tier has always put it. Longer-burning fuels like charcoal scale up from there.
     private const float FireFuelBurnHoursPerSecond = 0.03125f;
 
     public float SolidFuelHours(ItemStack? stack)

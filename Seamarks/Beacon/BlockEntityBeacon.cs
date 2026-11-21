@@ -218,8 +218,8 @@ public class BlockEntityBeacon : BlockEntity
         // pinned it to burn forever and the pile shouldn't flicker out from under that.
         if (tier == BeaconTier.Fire && !IsEverburning && RemainingFuelHours <= 0f)
         {
-            // Cloned so scale/offset/rotation carry over unchanged; a hand-rolled CompositeShape here
-            // previously left them at their defaults and rendered the no-fuel mesh unscaled.
+            // Cloned so scale/offset/rotation carry over unchanged. A fresh CompositeShape would reset them
+            // and draw the no-fuel mesh unscaled.
             CompositeShape noFuelShape = Block.Shape.Clone();
             noFuelShape.IgnoreElements = [.. noFuelShape.IgnoreElements ?? [], "Fuel"];
             tessThreadTesselator.TesselateShape(

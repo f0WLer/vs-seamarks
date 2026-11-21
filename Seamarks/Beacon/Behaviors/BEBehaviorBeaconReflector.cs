@@ -74,9 +74,9 @@ public class BEBehaviorBeaconReflector : BEBehaviorBeacon, IBeaconInfoContributo
     // Retuning a fitted housing through the beam commands.
     public void HousingChanged() => Beacon.MarkStateChanged();
 
-    // Same tree keys the monolithic block entity used, so existing saved beacons keep their plates. The
-    // signature is nested under its own key so an absent one reads back as "no housing" without needing a
-    // separate flag.
+    // The plate keys match what earlier saves wrote, so existing beacons keep their plates. The signature
+    // is nested under its own key so an absent one reads back as "no housing" without needing a separate
+    // flag.
     public override void ToTreeAttributes(ITreeAttribute tree)
     {
         tree.SetInt("plateCount", plateCount);

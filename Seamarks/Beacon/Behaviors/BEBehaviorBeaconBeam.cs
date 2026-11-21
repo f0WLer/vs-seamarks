@@ -120,8 +120,8 @@ public class BEBehaviorBeaconBeam : BEBehaviorBeacon, IBeaconInfoContributor, IB
         Beacon.MarkStateChanged();
     }
 
-    // The old per-beacon beamCount/beamColor*/beamWidth* keys are no longer read. Beacons saved with them
-    // load as plain and take their signature from whatever housing gets fitted.
+    // Older saves also carry beamCount/beamColor*/beamWidth* keys. They're ignored, and a beacon's
+    // signature comes from whatever housing is fitted.
     public override void ToTreeAttributes(ITreeAttribute tree)
     {
         tree.SetFloat("headingRad", headingRad);

@@ -190,8 +190,8 @@ public class SeamarksModSystem : ModSystem
                 return TextCommandResult.Success(Lang.Get(enable ? "seamarks:cmd-eternal-on" : "seamarks:cmd-eternal-off"));
             });
 
-        // Beam count and width now come from the Lens Panels fitted into the housing, not commands. Color
-        // is still a command, editing the housing the caller is looking at, placed or already fitted.
+        // Beam count and width come from the Lens Panels fitted into the housing. Color is set by command,
+        // editing the housing the caller is looking at, placed or already fitted.
         // Server-side, so the change persists and reaches everyone, the far blip-only observers included.
         api.ChatCommands.Create("seamarksbeamcolor")
             .WithDescription($"Set the color of one beam of the Optics Housing you're looking at: a name (red, orange, cyan...), a hex code like ff8800, or 'reset' for the tier default. Beam 0 sets every beam at once; 1-{BeamSignature.MaxBeamCount} sets just that beam.")

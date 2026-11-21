@@ -88,13 +88,16 @@ public sealed class BeamSignature
     {
         int idx = (int)GameMath.Clamp(beamNumber, MinBeamCount, MaxBeamCount) - 1;
         colorIsManual[idx] = packed >= 0;
-        colors[idx] = packed < 0 ? BeamColor.TierDefault : (packed & 0xFFFFFF);
+        colors[idx] = Normalize(packed);
         return colors[idx];
     }
 
+    // Any negative value means the tier default, and a real color is kept to its 24 bits.
+    private static int Normalize(int packed) => packed < 0 ? BeamColor.TierDefault : packed & 0xFFFFFF;
+
     public int SetAllColors(int packed)
     {
-        int value = packed < 0 ? BeamColor.TierDefault : (packed & 0xFFFFFF);
+        int value = Normalize(packed);
         Array.Fill(colors, value);
         Array.Fill(colorIsManual, packed >= 0);
         return value;
@@ -108,7 +111,7 @@ public sealed class BeamSignature
     {
         int idx = (int)GameMath.Clamp(beamNumber, MinBeamCount, MaxBeamCount) - 1;
         if (colorIsManual[idx]) return;
-        colors[idx] = packed < 0 ? BeamColor.TierDefault : (packed & 0xFFFFFF);
+        colors[idx] = Normalize(packed);
     }
 
     // Writes the derived beam fields onto the snapshot clients read. Each beam's width comes from its

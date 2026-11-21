@@ -89,7 +89,7 @@ public sealed class GuiDialogBeamTuning : GuiDialog
         }
 
         double btnY = top + gridH + 8;
-        // The 11 shape sliders edit whichever optic shape this toggle selects, and the rest are the shared
+        // The shape sliders edit whichever optic shape this toggle selects, and the rest are the shared
         // globals. Toggling re-composes so every slider resyncs to the now-active shape.
         string editLabel = BeamTuning.EditingFocused ? "Editing: WITH LENS" : "Editing: NO LENS";
         composer

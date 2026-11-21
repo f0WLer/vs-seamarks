@@ -18,9 +18,7 @@
 	// scale is a uniform 3-axis multiplier applied about the block's own horizontal center
 	// (ShapeTesselator's constantCenterXZ), not the corner, so no offsetX/offsetZ is needed: firebeacon's
 	// own footprint is already centered in its source shape, and doubling it in place fills exactly the
-	// one block it now occupies. offsetX/offsetZ:0.5 was needed only for the old 2x2 footprint, to push
-	// the doubled-but-still-centered model out to that area's true center; it now overshoots into the
-	// neighboring block instead, which is what the visible drift after this shrink turned out to be.
+	// one block it occupies. An offset of 0.5 would push the model into the neighboring block.
 	//
 	// BlockEntityBeacon re-adds the OilLamp's Reflector as its own mesh turned to the beam heading, so
 	// ignoreElements has to drop it here or it draws twice. VS_Gear rides along with it for the same
@@ -95,7 +93,7 @@
 	// only: anything spawned inside the glass chimney gets depth-culled behind the glass faces, so the
 	// fire itself is the emissive Flame mesh element, and only smoke clears the chimney top into open air.
 	// Fire has no glass in the way, so it gets the full embers/smoke/flame set, centered over the bowl
-	// (the controller cell's own top-center already lands there now that the footprint is 1x1) and
+	// (the controller cell's own top-center already lands there) and
 	// nudged down to sit just inside its rim instead of hovering above it.
 	particlePropertiesByType: {
 		"beacon-oillamp-lit": [

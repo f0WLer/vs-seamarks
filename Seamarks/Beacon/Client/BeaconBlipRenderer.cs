@@ -176,8 +176,8 @@ public sealed class BeaconBlipRenderer : IRenderer
             float currentHeading = BeamState.CurrentHeadingRad(info, nowSweepHours);
 
             // Draw position uses the tier's own offset, not the anchor-based Pos+0.5 that the range
-            // maths uses. Fire's blip sits centred in its 2x2x2 footprint instead of at the placed corner,
-            // while range stays anchor-based to match the server. Both blips draw from here.
+            // maths uses. Fire's blip sits up by the flame and the lamp's at its optic, while range stays
+            // anchor-based to match the server. Both blips draw from here.
             double drawDx = info.Pos.X + archetype.BlipOffsetX - camPos.X;
             double drawDy = info.Pos.Y + archetype.BlipOffsetY - camPos.Y;
             double drawDz = info.Pos.Z + archetype.BlipOffsetZ - camPos.Z;
@@ -221,7 +221,7 @@ public sealed class BeaconBlipRenderer : IRenderer
                 prog.Uniform("centerRelPos", (float)drawDx, (float)drawDy, (float)drawDz);
                 prog.Uniform("size", blipSize);
                 prog.Uniform("tintColor", cr, cg, cb, farAlpha);
-                prog.Uniform("glowStrength", 1f); // 1 keeps the original look now that the uniform is live
+                prog.Uniform("glowStrength", 1f); // 1 leaves the glow unscaled
                 rapi.RenderMesh(quadMeshRef);
             }
 

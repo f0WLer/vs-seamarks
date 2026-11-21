@@ -17,8 +17,8 @@
 	],
 	// scale is a uniform 3-axis multiplier applied about the block's own horizontal center
 	// (ShapeTesselator's constantCenterXZ), not the corner, so no offsetX/offsetZ is needed: firebeacon's
-	// own footprint is already centered in its source shape, and doubling it in place fills exactly the
-	// one block it occupies. An offset of 0.5 would push the model into the neighboring block.
+	// own footprint is already centered in its source shape, and doubling it in place fills exactly one
+	// block's width. An offset of 0.5 would push the model into the neighboring block.
 	//
 	// BlockEntityBeacon re-adds the OilLamp's Reflector as its own mesh turned to the beam heading, so
 	// ignoreElements has to drop it here or it draws twice. VS_Gear rides along with it for the same

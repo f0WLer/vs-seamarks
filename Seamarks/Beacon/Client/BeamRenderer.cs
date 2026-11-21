@@ -267,10 +267,6 @@ public sealed class BeamRenderer : IRenderer
             else { travelled = tMaxZ; tMaxZ += tDeltaZ; z += stepZ; }
             if (travelled > length) break;
 
-            // The beacon's own cells never stop its beam, which matters where the lamp sits off-centre in
-            // its block and the walk crosses straight out into the rest of the structure.
-            if (x == beaconPos.X && y == beaconPos.Y && z == beaconPos.Z) continue;
-
             samplePos.Set(x, y, z);
             if (blockAccessor.GetBlock(samplePos).AllSidesOpaque)
             {

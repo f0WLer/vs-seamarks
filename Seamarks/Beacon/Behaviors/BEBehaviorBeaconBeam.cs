@@ -75,6 +75,9 @@ public class BEBehaviorBeaconBeam : BEBehaviorBeacon, IBeaconInfoContributor, IB
     private bool ReanchorSweep(float shaftSpeed)
     {
         float quantized = MathF.Round(shaftSpeed / SpeedQuantum) * SpeedQuantum;
+        // A shaft still turning can't read as stopped: rounding would take everything under half a quantum
+        // to a period of 0, so the beam would sit still while the optic's sound kept playing.
+        if (quantized == 0f && shaftSpeed != 0f) quantized = SpeedQuantum;
         if (quantized == lastQuantizedSpeed && sweepAnchorTotalHours >= 0) return false;
 
         double now = BeamState.SweepNowHours(Api!.World);

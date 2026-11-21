@@ -194,8 +194,17 @@ public sealed class BeaconServer : IDisposable
         return info.Pos.DistanceTo(eyePos) <= maxRange;
     }
 
+    // A beacon in an unloaded chunk can run out of fuel with nothing to say so, and a player standing
+    // still never trips the movement recheck, so the registry is swept for spent entries on every tick.
+    private void RemoveBurnedOut()
+    {
+        double nowHours = sapi.World.Calendar.TotalHours;
+        foreach (var pos in beaconsByPos.Values.Where(i => !i.IsBurning(nowHours)).Select(i => i.Pos).ToList()) Remove(pos);
+    }
+
     private void OnTick(float dt)
     {
+        RemoveBurnedOut();
         foreach (var tracked in trackedPlayers.Values)
         {
             UpdateVisibleSetForPlayer(tracked);

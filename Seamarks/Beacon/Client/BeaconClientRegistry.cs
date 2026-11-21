@@ -3,7 +3,7 @@ using Vintagestory.API.MathTools;
 
 namespace Seamarks.Beacon.Client;
 
-// Client-side mirror of the server's BeaconRegistry, but only for beacons the server has decided
+// Client-side mirror of the server's beacon set, but only for beacons the server has decided
 // are inside this player's max-possible-range set. Fed purely by network packets, never by chunk loading.
 //
 // It also owns the ignition fade lifecycle: a beacon ramps its visuals in when first lit and out when

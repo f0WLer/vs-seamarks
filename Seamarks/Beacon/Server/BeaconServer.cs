@@ -6,7 +6,7 @@ namespace Seamarks.Beacon.Server;
 // Per-player tracking of which beacons sit inside that player's maximum possible range, diffed each pass
 // so only the changes go over the wire. Follows the shape of Farseer's UpdateRegionsInView but much
 // simpler, with no priority queue and no generation caching, because beacons are existing block entities
-// reporting themselves in through BeaconRegistry and not something this has to generate.
+// reporting themselves in through Upsert and not something this has to generate.
 public sealed class BeaconServer : IDisposable
 {
     private sealed class TrackedPlayer
@@ -27,10 +27,14 @@ public sealed class BeaconServer : IDisposable
 
     private readonly ICoreServerAPI sapi;
     private readonly IServerNetworkChannel channel;
-    private readonly BeaconRegistry registry = new();
     private readonly Dictionary<string, TrackedPlayer> trackedPlayers = [];
 
-    public BeaconRegistry Registry => registry;
+    // Every lit beacon the server knows of, kept up to date by the block entities as they load and
+    // unload, and restored across restarts from the savegame snapshot below. Each block entity's own tree
+    // attributes stay the source of truth for its state.
+    private readonly Dictionary<BlockPos, BeaconInfo> beaconsByPos = [];
+
+    public IReadOnlyDictionary<BlockPos, BeaconInfo> Beacons => beaconsByPos;
 
     public BeaconServer(ICoreServerAPI sapi)
     {
@@ -78,31 +82,31 @@ public sealed class BeaconServer : IDisposable
     // tick, so a player standing still still hears about a beacon that just became visible.
     public void Upsert(BeaconInfo info)
     {
-        registry.Upsert(info);
+        beaconsByPos[info.Pos] = info;
         NotifyBeaconChanged(info);
     }
 
     // A beacon burned out or was broken.
     public void Remove(BlockPos pos)
     {
-        if (registry.Remove(pos)) NotifyBeaconRemoved(pos);
+        if (beaconsByPos.Remove(pos)) NotifyBeaconRemoved(pos);
     }
 
-    // Restores the registry from the last save, independent of which chunks happen to be loaded.
+    // Restores the beacon set from the last save, independent of which chunks happen to be loaded.
     // Without this, a beacon whose chunk hasn't loaded yet this session stays invisible to everyone until
     // someone wanders near the physical structure, which defeats the whole point of a far-render beacon.
-    // Fires once at startup before any player can join, so this writes straight into the registry instead
-    // of going through Upsert, which would notify a trackedPlayers set that's still empty anyway.
+    // Fires once at startup before any player can join, so this writes straight into the dictionary
+    // instead of going through Upsert, which would notify a trackedPlayers set that's still empty anyway.
     private void OnSaveGameLoaded()
     {
         var snapshot = sapi.WorldManager.SaveGame.GetData<BeaconFullSyncPacket>(SaveDataKey, new BeaconFullSyncPacket());
         foreach (var info in snapshot.Beacons)
         {
-            registry.Upsert(info);
+            beaconsByPos[info.Pos] = info;
         }
     }
 
-    // Persisted eagerly on every registry mutation instead of batched onto GameWorldSave, because that
+    // Persisted eagerly on every change instead of batched onto GameWorldSave, because that
     // event doesn't reliably fire on a singleplayer "save and exit" and silently lost every beacon except
     // the one whose chunk happened to still be loaded, which survives on its own through the block
     // entity's normal chunk save. StoreData only touches an in-memory dictionary, so doing it on every
@@ -111,7 +115,7 @@ public sealed class BeaconServer : IDisposable
     {
         var snapshot = new BeaconFullSyncPacket
         {
-            Beacons = registry.All.Values.ToArray(),
+            Beacons = beaconsByPos.Values.ToArray(),
         };
         sapi.WorldManager.SaveGame.StoreData(SaveDataKey, snapshot);
     }
@@ -143,7 +147,7 @@ public sealed class BeaconServer : IDisposable
         var beacons = new List<BeaconInfo>(visible.Count);
         foreach (var pos in visible)
         {
-            if (registry.TryGet(pos, out var info)) beacons.Add(info);
+            if (beaconsByPos.TryGetValue(pos, out var info)) beacons.Add(info);
         }
         channel.SendPacket(new BeaconFullSyncPacket { Beacons = [.. beacons] }, player);
 
@@ -166,7 +170,7 @@ public sealed class BeaconServer : IDisposable
         double nowHours = sapi.World.Calendar.TotalHours;
 
         var visible = new HashSet<BlockPos>();
-        foreach (var info in registry.All.Values)
+        foreach (var info in beaconsByPos.Values)
         {
             if (IsVisible(info, eyePos, nowHours))
             {
@@ -223,7 +227,7 @@ public sealed class BeaconServer : IDisposable
 
         foreach (var pos in newlyVisible)
         {
-            if (registry.TryGet(pos, out var info))
+            if (beaconsByPos.TryGetValue(pos, out var info))
             {
                 channel.SendPacket(info, tracked.Player);
             }

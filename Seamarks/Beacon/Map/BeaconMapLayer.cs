@@ -50,7 +50,6 @@ public class BeaconMapLayer : MapLayer
     }
 
     private SeamarksModSystem? Mod => sapi?.ModLoader.GetModSystem<SeamarksModSystem>();
-    private BeaconRegistry? Registry => Mod?.Server?.Registry;
 
     public override void OnMapOpenedServer(IServerPlayer fromPlayer)
     {
@@ -73,14 +72,14 @@ public class BeaconMapLayer : MapLayer
 
     private void SendMarkers(IServerPlayer player)
     {
-        BeaconRegistry? registry = Registry;
-        if (registry == null) return;
+        var beacons = Mod?.Server?.Beacons;
+        if (beacons == null) return;
 
         double nowHours = sapi!.World.Calendar.TotalHours;
         // An empty send when the layer is switched off, not a skipped one, so a live toggle clears whatever
         // blips a player already has up.
         BeaconInfo[] lit = (Mod?.Config?.ShowBeaconsOnMap ?? true)
-            ? registry.All.Values.Where(info => info.IsBurning(nowHours)).ToArray()
+            ? beacons.Values.Where(info => info.IsBurning(nowHours)).ToArray()
             : [];
 
         // The full BeaconInfo goes over, not a trimmed marker, so the map can run the exact sweep-and-color

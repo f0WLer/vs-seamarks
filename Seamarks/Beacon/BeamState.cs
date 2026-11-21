@@ -147,11 +147,15 @@ public static class BeamState
 
     // The one sweep formula both paths run: the far blip off the synced BeaconInfo, and the near optic off
     // the beam behavior's own copy of the same anchor. Sharing it is what keeps the visible reflector and
-    // the distant flash pointing the same way at the same speed. Returns the rest heading when the sweep
-    // isn't running or has no anchor yet.
+    // the distant flash pointing the same way at the same speed. A beam that has never been driven sits at
+    // its rest heading. Once the drive stops it holds the angle it stopped at, which the anchor already
+    // records, and starts again from there. `running` only matters while a period is still set, where a
+    // lamp that has gone dark falls back to the rest heading.
     public static float SweepHeadingRad(bool running, float restHeadingRad, float anchorRad, double anchorHours, float periodHours, double nowHours)
     {
-        if (!running || periodHours <= 0f || anchorHours < 0) return restHeadingRad;
+        if (anchorHours < 0) return restHeadingRad;
+        if (periodHours <= 0f) return anchorRad;
+        if (!running) return restHeadingRad;
 
         double revs = (nowHours - anchorHours) / periodHours;
         // Wrap into a single revolution before scaling so the angle stays bounded over long burns

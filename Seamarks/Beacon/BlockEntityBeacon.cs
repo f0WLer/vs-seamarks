@@ -249,11 +249,13 @@ public class BlockEntityBeacon : BlockEntity
 
     // Whether the optic is actually turning right now, the same condition CurrentReflectorHeadingRad uses
     // to decide whether to advance the angle. Exposed for anything that only makes sense while the beam is
-    // moving, like the mechanical squeak.
+    // moving, like the mechanical squeak. It reads the sweep period and not the live shaft, so this side
+    // agrees with what the far observers are sent, and the optic eases off over the moment between the
+    // drive dropping and the beam behavior noticing.
     public bool IsRotating =>
         BeaconArchetypeData.Of(tier).Beam.Directional
         && IsBurning
-        && (GetBehavior<BEBehaviorBeaconBeam>()?.IsMechanicallyActive ?? false);
+        && (GetBehavior<BEBehaviorBeaconBeam>()?.SweepPeriodHours ?? 0f) > 0f;
 
     private double NowHours => Api.World.Calendar.TotalHours;
 

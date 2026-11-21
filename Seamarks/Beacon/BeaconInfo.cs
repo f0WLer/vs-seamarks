@@ -42,9 +42,9 @@ public sealed class BeaconInfo
     // instead, so a real 0 always gets sent.
     [ProtoMember(10), DefaultValue(DefaultBeamCount)] public int BeamCount { get; set; } = DefaultBeamCount;
 
-    // Optional per-beam color overrides, packed 0xRRGGBB; index i is beam i's color, a slot of -1
-    // (or an absent/short array) means "use the tier tint". Null in the common all-default case, so
-    // pre-feature snapshots and beacons that never set a color add nothing to the wire/disk form.
+    // Optional per-beam tints from the lens panels' glass, packed 0xRRGGBB; index i is beam i's color, a
+    // slot of -1 (or an absent/short array) means "use the tier tint". Null when no panel tints, so
+    // pre-feature snapshots and clear-glass housings add nothing to the wire/disk form.
     [ProtoMember(12)] public int[]? BeamColors { get; set; }
 
     // Optional per-beam angular-width overrides in degrees; index i is beam i's width, a slot of <= 0

@@ -189,65 +189,6 @@ public class SeamarksModSystem : ModSystem
                 beacon.SetEverburning(enable);
                 return TextCommandResult.Success(Lang.Get(enable ? "seamarks:cmd-eternal-on" : "seamarks:cmd-eternal-off"));
             });
-
-        // Beam count and width come from the Lens Panels fitted into the housing. Color is set by command,
-        // editing the housing the caller is looking at, placed or already fitted.
-        // Server-side, so the change persists and reaches everyone, the far blip-only observers included.
-        api.ChatCommands.Create("seamarksbeamcolor")
-            .WithDescription($"Set the color of one beam of the Optics Housing you're looking at: a name (red, orange, cyan...), a hex code like ff8800, or 'reset' for the tier default. Beam 0 sets every beam at once; 1-{BeamSignature.MaxBeamCount} sets just that beam.")
-            .RequiresPlayer()
-            .RequiresPrivilege(Privilege.chat)
-            .WithArgs(
-                api.ChatCommands.Parsers.IntRange("beam", 0, BeamSignature.MaxBeamCount),
-                api.ChatCommands.Parsers.Word("color"))
-            .HandleWith(args =>
-            {
-                var target = LookedAtSignature(api, args, out var error);
-                if (target == null) return error!;
-                if (!BeamColor.TryParse((string)args[1], out int packed))
-                    return TextCommandResult.Error($"Unknown color '{(string)args[1]}'. Use a name (red, orange, cyan...), a hex code like ff8800, or 'reset'.");
-                int which = (int)args[0];
-                if (which == 0)
-                {
-                    int all = target.Signature.SetAllColors(packed);
-                    target.Publish();
-                    return TextCommandResult.Success($"All beams set to {BeamColor.Describe(all)}.");
-                }
-                int applied = target.Signature.SetColor(which, packed);
-                target.Publish();
-                return TextCommandResult.Success($"Beam {which} color set to {BeamColor.Describe(applied)}.");
-            });
-    }
-
-    // The signature the caller is pointing at, along with the callback that republishes it once edited.
-    // A housing is editable both sitting on the ground and fitted to a beacon, so a player never has to
-    // pull one off just to retune it.
-    private sealed record SignatureTarget(BeamSignature Signature, Action Publish);
-
-    private static SignatureTarget? LookedAtSignature(ICoreServerAPI api, TextCommandCallingArgs args, out TextCommandResult? error)
-    {
-        var blockSel = args.Caller.Player?.CurrentBlockSelection;
-        if (blockSel == null)
-        {
-            error = TextCommandResult.Error(Lang.Get("seamarks:cmd-error-notlookingatblock"));
-            return null;
-        }
-
-        var be = api.World.BlockAccessor.GetBlockEntity(blockSel.Position);
-        error = null;
-
-        if (be is BlockEntityOpticsHousing placed)
-        {
-            return new SignatureTarget(placed.Signature, placed.SignatureChanged);
-        }
-        if (be is BlockEntityBeacon beacon
-            && beacon.GetBehavior<BEBehaviorBeaconReflector>() is { Housing: { } fitted } reflector)
-        {
-            return new SignatureTarget(fitted, reflector.HousingChanged);
-        }
-
-        error = TextCommandResult.Error(Lang.Get("seamarks:cmd-error-nohousing"));
-        return null;
     }
 
     public override void StartClientSide(ICoreClientAPI api)

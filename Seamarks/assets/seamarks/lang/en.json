@@ -253,7 +253,6 @@
 
 	"seamarks:cmd-error-notlookingatblock": 	"Not looking at a block.",
 	"seamarks:cmd-error-notlookingatbeacon": 	"Not looking at a beacon.",
-	"seamarks:cmd-error-nohousing": 			"Look at an Optics Housing, either placed down or fitted to a beacon.",
 	"seamarks:cmd-eternal-on": 					"This beacon will now burn forever, needing no fuel.",
 	"seamarks:cmd-eternal-off": 				"This beacon burns normally again and will use fuel."
 }

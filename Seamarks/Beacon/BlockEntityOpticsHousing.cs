@@ -9,8 +9,8 @@ namespace Seamarks.Beacon;
 
 // A placed housing the player fits Lens Panels into through a slot GUI. The three slots are the source
 // of truth for the beams: their filled panels, compacted in slot order, become the ordered signature the
-// mesh draws and a fitted beacon reads. The signature also stores the per-beam colors, which have no
-// item to live in, and it's what travels on the dropped or picked stack so break-and-replace is a no-op.
+// mesh draws and a fitted beacon reads. The signature is what travels on the dropped or picked stack, so
+// break-and-replace is a no-op.
 public class BlockEntityOpticsHousing : BlockEntityOpenableContainer
 {
     private const int SlotCount = BeamSignature.MaxBeamCount;
@@ -41,10 +41,8 @@ public class BlockEntityOpticsHousing : BlockEntityOpenableContainer
         MarkDirty(true);
     }
 
-    // Rebuild the ordered panel list from whichever slots hold a panel, left to right. Each slot's glass
-    // retints its beam every time this runs (BeamSignature.SetColorFromPanel skips a beam a player has
-    // retuned by hand), so swapping to a different colored panel, or back to clear, always updates the
-    // beam instead of only the first panel ever seated getting to set it.
+    // Rebuild the ordered panel list from whichever slots hold a panel, left to right. A beam's color
+    // follows from its panel's glass, so swapping panels needs no separate color step.
     private void SyncPanelsFromInventory()
     {
         var panels = new List<(int Type, string GlassColor)>(SlotCount);
@@ -52,9 +50,7 @@ public class BlockEntityOpticsHousing : BlockEntityOpenableContainer
         {
             ItemStack? stack = inventory[i].Itemstack;
             if (!BlockOpticsHousing.LensPanelType(stack, out int type)) continue;
-            string glassColor = BlockOpticsHousing.LensPanelColor(stack);
-            panels.Add((type, glassColor));
-            signature.SetColorFromPanel(panels.Count, BeamColor.LensColorPacked(glassColor));
+            panels.Add((type, BlockOpticsHousing.LensPanelColor(stack)));
         }
         signature.SetPanels(panels);
     }
@@ -70,10 +66,6 @@ public class BlockEntityOpticsHousing : BlockEntityOpenableContainer
         }
         return true;
     }
-
-    // Called after the signature's colors are retuned by the beam-color command. MarkDirty(true) re-runs
-    // OnTesselation so the model reglazes, and syncs the change out.
-    public void SignatureChanged() => MarkDirty(true);
 
     // The fitted panels ride the dropped housing stack (BlockOpticsHousing.GetDrops), so they must not
     // also spill as loose items, which means skipping BlockEntityContainer.OnBlockBroken and its DropAll.

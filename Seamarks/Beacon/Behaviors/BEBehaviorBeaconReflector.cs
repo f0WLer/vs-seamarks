@@ -71,9 +71,6 @@ public class BEBehaviorBeaconReflector : BEBehaviorBeacon, IBeaconInfoContributo
         return true;
     }
 
-    // Retuning a fitted housing through the beam commands.
-    public void HousingChanged() => Beacon.MarkStateChanged();
-
     // The plate keys match what earlier saves wrote, so existing beacons keep their plates. The signature
     // is nested under its own key so an absent one reads back as "no housing" without needing a separate
     // flag.

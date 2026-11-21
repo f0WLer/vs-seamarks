@@ -74,7 +74,6 @@ Lit beacons also appear on the world map under a "Beacons" layer, flashing in st
 | Command | Privilege | What it does |
 |---|---|---|
 | `/seamarkseternal [on\|off]` | `controlserver` | Pins the beacon you're looking at to burn forever, taking no fuel. With no argument it toggles. |
-| `/seamarksbeamcolor <beam> <color>` | `chat` | Recolors one beam of the Optics Housing you're looking at, placed or fitted. Beam 0 sets them all. Takes a name, a hex code like `ff8800`, or `reset`. |
 
 ## Configuration
 
